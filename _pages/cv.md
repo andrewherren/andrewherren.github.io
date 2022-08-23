@@ -29,7 +29,7 @@ Work experience
 * **Cornerstone Research**
   * Analyst (Summer 2012 - Summer 2014)
   
-Publications
+Research
 ======
   <ul>{% for post in site.publications %}
     {% include archive-single-cv.html %}
@@ -43,6 +43,7 @@ Talks
   
 Teaching
 ======
-  <ul>{% for post in site.teaching %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+* **MAT 270** (Calculus with Analytic Geometry I) Recitation, Fall 2020
+* **MAT 271** (Calculus with Analytic Geometry II) Recitation, Fall 2021
+* **MAT 271** (Calculus with Analytic Geometry II) Recitation, Spring 2022
+
