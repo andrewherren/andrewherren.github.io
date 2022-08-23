@@ -5,6 +5,7 @@ type: "Talk"
 permalink: /talks/SBIES-2022
 venue: "Washington University in St. Louis"
 date: 2022-08-12
+location: "St. Louis, Missouri, USA"
 url: "https://andrewherren.github.io/files/SSBIES-presentation-2022H2.pdf"
 ---
 
