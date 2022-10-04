@@ -16,7 +16,9 @@ This work addresses the question under several assumptions:
 2. No post-treatment covariates
 3. No unmeasured confounding
 
-In this case, a stratification estimator that estimates and re-aggregates the treatment-control contrasts ($\bar{Y}_{Z=1,X=x} - \bar{Y}_{Z=0,X=x}$) for each unique value $x$ of the covariate space will identify the ATE.
+In this case, a stratification estimator that estimates and re-aggregates the treatment-control contrasts 
+$$\bar{Y}_{Z=1,X=x} - \bar{Y}_{Z=0,X=x}$$ 
+for each unique x in the covariate space will identify the ATE.
 
 If you've read this far, you may be thinking "has Drew ever worked with a real dataset before?? Even if we have discrete covariates and are willing to make the assumptions above, splitting on every unique covariate level is going to give us a massive variance!"
 
