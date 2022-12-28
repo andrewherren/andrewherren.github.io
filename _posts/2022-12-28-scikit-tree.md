@@ -81,7 +81,10 @@ This file can be written from scratch, since this project is brand new and doesn
 ```
 .. -*- mode: rst -*-
 
-**scikit-tree** is a project designed to make experimentation with tree-based machine learning methods straightforward. It relies on, and extends, the tree code in `scikit-learn`.
+**scikit-tree** is a project designed to make 
+experimentation with tree-based machine learning 
+methods straightforward. It relies on, and 
+extends, the tree code in `scikit-learn`.
 ```
 
 ### 2. Library subfolder
@@ -259,7 +262,7 @@ and change any imports that reference `sklearn.tree` to reference `skltree.tree`
 
 We need to add the cython extension modules to the default `setup.py` included in the `scikit-learn-contrib` project.
 
-```{python}
+```
 libraries = []
 if os.name == "posix":
     libraries.append("m")
