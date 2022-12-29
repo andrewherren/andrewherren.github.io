@@ -20,7 +20,7 @@ They build on the conceptually simple idea of
 This makes (small, individual) trees easy to visualize and easy to explain to stakeholders, relative to other machine learning methods. A common use case for trees is to combine the predictions of many small trees into an "ensemble" (gradient boosted decision trees, random forests, etc...).
 
 While there are many open source projects that offer high-quality tree / tree ensemble algorithms (to name a few, 
-[scikit-learn](https://scikit-learn.org/stable/), [xgboost](https://xgboost.readthedocs.io/en/stable/), and [lightgbm](https://lightgbm.readthedocs.io/en/latest/)), the R / Python implementations are designed to *run* a specific algorithms or set of algorithms, not to expose a general-purpose API that allows for custom implementations of decision tree algorithms.
+[scikit-learn](https://scikit-learn.org/stable/), [xgboost](https://xgboost.readthedocs.io/en/stable/), and [lightgbm](https://lightgbm.readthedocs.io/en/latest/)), the R / Python implementations are designed to *run* a specific algorithm or set of algorithms, not to expose a general-purpose API that allows for custom implementations of decision tree algorithms.
 
 This means that, in most cases, if you have a *truly unique* idea that involves decision trees and you want to implement and test the idea, your options are:
 
