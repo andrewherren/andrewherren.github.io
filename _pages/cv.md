@@ -11,8 +11,8 @@ redirect_from:
 
 Education
 ======
-* B.A. in Mathematics and Economics, Georgetown University, 2012
-* Ph.D in Statistics, Arizona State University, 2023 (expected)
+* Ph.D in Statistics, Arizona State University, 2023 (expected), GPA 4.0/4.0
+* B.A. in Mathematics and Economics, Georgetown University, 2012, *cum laude*
 
 Work experience
 ======
