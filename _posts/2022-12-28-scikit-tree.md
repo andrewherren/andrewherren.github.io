@@ -231,19 +231,11 @@ from ._random cimport our_rand_r
 
 #### `_classes.py`
 
-Change any references to `from ..[sklearn library name] import ...` to `from sklearn.[sklearn library name] import ...`. The only exception, which will be made clear below, is
-
-```
-from ..utils._param_validation import Hidden, Interval, StrOptions
-```
+Change any references to `from ..[sklearn library name] import ...` to `from sklearn.[sklearn library name] import ...`.
 
 #### `_export.py`
 
 Change any references to `from ..[sklearn library name] import ...` to `from sklearn.[sklearn library name] import ...`
-
-#### `_param_validation.py`
-
-Some of the validation code used to create scikit-learn estimators depends on this file in the scikit-learn project which is not entirely included in the public scikit-learn API. The easiest way to solve this and keep moving is to vendor this file in a `skltree/utils` subfolder. Just change `from .validation import _is_arraylike_not_scalar` to `from sklearn.utils.validation import _is_arraylike_not_scalar`.
 
 ### 3. Library tests subfolder
 
