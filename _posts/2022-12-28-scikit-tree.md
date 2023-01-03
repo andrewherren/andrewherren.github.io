@@ -300,7 +300,8 @@ We will add some more minimal runner scripts later once the project has been bui
 First, we need to set up a python environment with necessary dependencies to build this code. Here, we largely mirror the scikit-learn developer guidelines. For mac and linux users, this can be done via conda with
 
 ```
-conda create -n partition_env -c conda-forge python=3.10 numpy scipy cython pytest matplotlib pandas \
+conda create -n partition_env -c conda-forge python=3.10 \
+    numpy scipy cython pytest matplotlib pandas scikit-learn \
     joblib threadpoolctl pytest compilers llvm-openmp
 ```
 
