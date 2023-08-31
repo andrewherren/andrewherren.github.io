@@ -11,11 +11,14 @@ redirect_from:
 
 Education
 ======
-* Ph.D in Statistics, Arizona State University, 2023 (expected), GPA 4.0/4.0
-* B.A. in Mathematics and Economics, Georgetown University, 2012, *cum laude*
+* Ph.D in Statistics, Arizona State University, 2019-2023, GPA 4.0/4.0
+* B.A. in Mathematics and Economics, Georgetown University, 2008-2012, *cum laude*
 
 Work experience
 ======
+* **University of Texas at Austin**
+  * Postdoctoral Fellow (Summer 2023-Present)
+
 * **Microsoft**
   * Data Scientist Intern (Summer 2021)
 
