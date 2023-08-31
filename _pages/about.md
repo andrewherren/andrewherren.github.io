@@ -8,5 +8,6 @@ redirect_from:
   - /about.html
 ---
 
-I am a fourth year PhD student in Statistics at Arizona State University, working with [Richard Hahn](https://math.la.asu.edu/~prhahn/), graduating at the end of this year (May 2023). 
+I am a Postdoctoral Fellow at the University of Texas at Austin, working with Carlos Carvalho. Prior to joining UT, I received my PhD in Statistics at Arizona State University, under [Richard Hahn](https://math.la.asu.edu/~prhahn/)'s supervision.
+
 My research interests center around machine learning for causal inference and interpretable machine learning.
