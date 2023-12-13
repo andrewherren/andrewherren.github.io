@@ -82,12 +82,12 @@ analytics:
 author:
   name             : "Drew Herren"
   avatar           : "profile.jpg"
-  bio              : "Statistics PhD student"
-  location         : "Arizona State University"
+  bio              : "Postdoctoral Fellow"
+  location         : "University of Texas at Austin"
   employer         :
   pubmed           : 
   googlescholar    : "https://scholar.google.com/citations?user=JVBcP2gAAAAJ&hl=en"
-  email            : "asherren@asu.edu"
+  email            : "andrew.herren@mccombs.utexas.edu"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
