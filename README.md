@@ -25,3 +25,7 @@ quarto publish gh-pages
 - `teaching.qmd` - Teaching history
 - `cv.qmd` - Curriculum vitae
 - `posts/` - Blog posts
+
+## Note
+
+This used to be a jekyll-based website, forked from https://github.com/academicpages/academicpages.github.io. I have removed the fork dependency but kept the commit history, which explains the large number of contributors from the former jekyll project.
