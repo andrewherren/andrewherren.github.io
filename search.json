@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "posts.html",
+    "href": "posts.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Experimenting with tree models using the scikit-learn codebase\n\n\n\n\n\n\n\n\nDec 28, 2022\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "cv.html",
     "href": "cv.html",
     "title": "CV",
@@ -28,6 +35,34 @@
     "text": "Teaching\n\nMAT 270 (Calculus with Analytic Geometry I) Recitation, Fall 2020\nMAT 271 (Calculus with Analytic Geometry II) Recitation, Fall 2021\nMAT 271 (Calculus with Analytic Geometry II) Recitation, Spring 2022"
   },
   {
+    "objectID": "teaching.html",
+    "href": "teaching.html",
+    "title": "Teaching",
+    "section": "",
+    "text": "I have taught recitation sections for the following courses at Arizona State University:\n\nMAT 270 (Calculus with Analytic Geometry I), Fall 2020\nMAT 271 (Calculus with Analytic Geometry II), Fall 2021\nMAT 271 (Calculus with Analytic Geometry II), Spring 2022"
+  },
+  {
+    "objectID": "talks.html",
+    "href": "talks.html",
+    "title": "Talks",
+    "section": "",
+    "text": "August 12, 2022 | Washington University in St. Louis, St. Louis, Missouri\nPresented at the 2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES).\nSlides (PDF)"
+  },
+  {
+    "objectID": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
+    "href": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
+    "title": "Talks",
+    "section": "",
+    "text": "August 12, 2022 | Washington University in St. Louis, St. Louis, Missouri\nPresented at the 2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES).\nSlides (PDF)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "About me",
+    "section": "",
+    "text": "I am a Postdoctoral Fellow at the University of Texas at Austin, working with Jared Murray. Prior to joining UT, I received my PhD in Statistics at Arizona State University, under Richard Hahn’s supervision. My research interests center around machine learning for causal inference.\nI built and continue to maintain stochtree which provides flexible stochastic decision tree ensembles for supervised learning and causal inference in R and Python APIs. I am very interested in high-performance computing and hardware acceleration, particularly techniques that can speed up tree-based algorithms."
+  },
+  {
     "objectID": "software.html",
     "href": "software.html",
     "title": "Software",
@@ -54,13 +89,6 @@
     "title": "Software",
     "section": "implementations",
     "text": "implementations\nImplementations is a Github repository with simple implementations of common statistical and mathematical algorithms that is now largely dormant, but was a fun source of learning during my PhD. The goal of the repo was to enable easy exploration of the challenges and tradeoffs inherent in statistics and machine learning methods, not to provide robust implementations for use in research or applications.\nSome examples:\n\nA (relatively) simple base R implementation of Bayesian CART (Chipman, George, McCulloch 1998)\nSimulation-based implementation and demonstration of the mathematical insights of Hirano et al (2003)\nSimple implementation of a Gibbs sampler for the horseshoe prior in Bayesian linear regression"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "About me",
-    "section": "",
-    "text": "I am a Postdoctoral Fellow at the University of Texas at Austin, working with Jared Murray. Prior to joining UT, I received my PhD in Statistics at Arizona State University, under Richard Hahn’s supervision. My research interests center around machine learning for causal inference.\nI built and continue to maintain stochtree which provides flexible stochastic decision tree ensembles for supervised learning and causal inference in R and Python APIs. I am very interested in high-performance computing and hardware acceleration, particularly techniques that can speed up tree-based algorithms."
   },
   {
     "objectID": "posts/2022-12-28-scikit-tree.html",
@@ -98,27 +126,6 @@
     "text": "Building the project\nFirst, we need to set up a python environment with necessary dependencies to build this code. Here, we largely mirror the scikit-learn developer guidelines. For mac and linux users, this can be done via conda with\nconda create -n partition_env -c conda-forge python=3.10 \\\n    numpy scipy cython pytest matplotlib pandas scikit-learn \\\n    joblib threadpoolctl pytest compilers llvm-openmp\nWe activate the environment with\nconda activate partition_env\nAnd build the library by navigating to the local copy of the repo and installing the package locally via pip\ncd ~/[path to folder]/scikit-tree\npython setup.py clean\npip install --no-build-isolation -e .\nThis may take some time but if it completes successfully, we are ready for the next step by running the unveil_tree example. In the same terminal, run\npython -m examples.tree.plot_regression_tree\nNow, we have a fast, cython-backed codebase that we can use to implement various tree algorithms!"
   },
   {
-    "objectID": "teaching.html",
-    "href": "teaching.html",
-    "title": "Teaching",
-    "section": "",
-    "text": "I have taught recitation sections for the following courses at Arizona State University:\n\nMAT 270 (Calculus with Analytic Geometry I), Fall 2020\nMAT 271 (Calculus with Analytic Geometry II), Fall 2021\nMAT 271 (Calculus with Analytic Geometry II), Spring 2022"
-  },
-  {
-    "objectID": "talks.html",
-    "href": "talks.html",
-    "title": "Talks",
-    "section": "",
-    "text": "August 12, 2022 | Washington University in St. Louis, St. Louis, Missouri\nPresented at the 2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES).\nSlides (PDF)"
-  },
-  {
-    "objectID": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
-    "href": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
-    "title": "Talks",
-    "section": "",
-    "text": "August 12, 2022 | Washington University in St. Louis, St. Louis, Missouri\nPresented at the 2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES).\nSlides (PDF)"
-  },
-  {
     "objectID": "publications.html",
     "href": "publications.html",
     "title": "Research",
@@ -145,12 +152,5 @@
     "title": "Research",
     "section": "Semi-supervised learning and the question of true versus estimated propensity scores",
     "text": "Semi-supervised learning and the question of true versus estimated propensity scores\nHerren, A. & Hahn, P. R. (2020)\narXiv | Paper | Code\nSuppose we have data:\n\n\\(Y\\): an outcome of interest\n\\(Z\\): a treatment that may (or may not) causally impact the outcome\n\\(X\\): a set of control variables that may be related to \\(Z\\), \\(Y\\), or both\n\nand suppose we’re willing to make all of the assumptions that would allow us to identify and estimate a causal effect of \\(Z\\) on \\(Y\\) after adjusting for \\(X\\).\nIf we were given a large amount of data from the same distribution, but without \\(Y\\) observed (“unlabeled data”), can we use that data in our estimate of the causal effect?\nThe answer, it turns out, is “yes!” but the explanation is somewhat more subtle than “more data is always better.” This paper explores the challenges and opportunities that come with doing causal inference on “unlabeled data.”"
-  },
-  {
-    "objectID": "posts.html",
-    "href": "posts.html",
-    "title": "Blog",
-    "section": "",
-    "text": "Experimenting with tree models using the scikit-learn codebase\n\n\n\n\n\n\n\n\nDec 28, 2022\n\n\n\n\n\nNo matching items"
   }
 ]
