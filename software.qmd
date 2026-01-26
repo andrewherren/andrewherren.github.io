@@ -1,0 +1,43 @@
+---
+title: "Software"
+---
+
+## stochtree
+
+[stochtree](https://stochtree.ai/) is a general-purpose R and Python library for stochastic tree ensemble modeling. 
+
+Its primary interface is a "batteries-included" implementation of both the [BART](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-1/BART-Bayesian-additive-regression-trees/10.1214/09-AOAS285.full) model for supervised learning and the [BCF](https://projecteuclid.org/journals/bayesian-analysis/volume-15/issue-3/Bayesian-Regression-Tree-Models-for-Causal-Inference--Regularization-Confounding/10.1214/19-BA1195.full) model for causal inference.
+
+It also offers a flexible "low-level" interface for specifying custom models that involve stochastic tree ensemble terms. The underlying implementation is largely in C++ with tree classes and I/O routines borrowed from [xgboost](https://xgboost.readthedocs.io/en/stable/) and [LightGBM](https://lightgbm.readthedocs.io/en/stable/). See [here](https://github.com/StochasticTree/stochtree/) for stochtree's source repo.
+
+---
+
+## scikit-tree
+
+[scikit-tree](https://github.com/andrewherren/scikit-tree) was a spiritual precursor to stochtree that began while I was a PhD student. It extended the Cython implementation of a decision tree learner from `scikit-learn`. The general rationale was:
+
+1. `scikit-learn`'s codebase is fast and heavily tested. Relying on their implementation of a tree data structures makes it easier to extend to new methods without worrying about edge cases in the tree code.
+
+2. Cython offers a nice tradeoff between high-level code (readability, maintainability, syntactic sugar, etc...) and low-level code (direct memory access / management, GIL release, etc...)
+
+The plan was for this project to provide an easier way to experiment with and extend decision tree models without spending 6 months writing C++. Ultimately, it proved not to be the right tool for the job, for several reasons:
+
+1. Coupling to cython / python means that an R package would be difficult to offer (and certainly swimming upsteam)
+
+2. Tooling: cython is much less developed than C / C++ in terms of debugging and profiling tools
+
+3. Performance: most existing BART packages were built with a C++ core and while cython can be much faster than Python, it is still nontrivial to write cython code in a way that competes with C++. The selling point of Cython being as readable as Python could end sacrificed as successive optimizations are made to match C++ performance.
+
+The process of setting up this testbed project is detailed in [this blog post](/posts/2022-12-28-scikit-tree.qmd).
+
+---
+
+## implementations
+
+[Implementations](https://github.com/andrewherren/implementations) is a Github repository with simple implementations of common statistical and mathematical algorithms that is now largely dormant, but was a fun source of learning during my PhD. The goal of the repo was to enable easy exploration of the challenges and tradeoffs inherent in statistics and machine learning methods, not to provide robust implementations for use in research or applications.
+
+Some examples:
+
+- [A (relatively) simple base R implementation of Bayesian CART](https://github.com/andrewherren/implementations/blob/main/papers/cart_mcmc.R) (Chipman, George, McCulloch 1998)
+- [Simulation-based implementation and demonstration of the mathematical insights of Hirano et al (2003)](https://github.com/andrewherren/implementations/blob/main/papers/hirano_imbens_ridder_2003.R)
+- [Simple implementation of a Gibbs sampler for the horseshoe prior in Bayesian linear regression](https://github.com/andrewherren/implementations/blob/main/statistics/horseshoe.R)

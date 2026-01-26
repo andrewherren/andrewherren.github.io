@@ -1,0 +1,41 @@
+project:
+  type: website
+
+website:
+  title: "Drew Herren"
+  navbar:
+    left:
+      - text: "Software"
+        href: software.qmd
+      - text: "Research"
+        href: publications.qmd
+      - text: "CV"
+        href: cv.qmd
+      - text: "Talks"
+        href: talks.qmd
+      - text: "Teaching"
+        href: teaching.qmd
+      - text: "Blog"
+        href: posts.qmd
+
+  page-footer:
+    center: "Drew Herren"
+
+  sidebar:
+    - id: default
+      style: floating
+      contents:
+        - text: "{{< fa envelope >}} Email"
+          href: mailto:andrew.herren@mccombs.utexas.edu
+        - text: "{{< fa brands github >}} GitHub"
+          href: https://github.com/andrewherren
+        - text: "{{< fa graduation-cap >}} Google Scholar"
+          href: https://scholar.google.com/citations?user=JVBcP2gAAAAJ&hl=en
+        - text: "{{< fa id-card >}} ORCID"
+          href: https://orcid.org/0000-0003-4109-6611
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true

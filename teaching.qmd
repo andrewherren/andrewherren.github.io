@@ -1,0 +1,9 @@
+---
+title: "Teaching"
+---
+
+I have taught recitation sections for the following courses at Arizona State University:
+
+- **MAT 270** (Calculus with Analytic Geometry I), Fall 2020
+- **MAT 271** (Calculus with Analytic Geometry II), Fall 2021
+- **MAT 271** (Calculus with Analytic Geometry II), Spring 2022

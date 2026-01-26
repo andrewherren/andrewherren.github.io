@@ -1,0 +1,11 @@
+---
+title: "Talks"
+---
+
+## Feature selection for learning causal effects: a finite-sample, stratification estimator perspective
+
+**August 12, 2022** | Washington University in St. Louis, St. Louis, Missouri
+
+Presented at the [2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES)](https://event.olin.wustl.edu/sbies).
+
+[Slides (PDF)](files/SSBIES-presentation-2022H2.pdf)

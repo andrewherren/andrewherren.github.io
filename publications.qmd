@@ -1,0 +1,57 @@
+---
+title: "Research"
+---
+
+## Feature selection in stratification estimators of causal effects
+
+**Hahn, P. R. & Herren, A. (2022)**
+
+*arXiv* | [Paper](https://arxiv.org/abs/2209.11400)
+
+What role (if any) can modern, machine-learning-based feature selection techniques play in average treatment effect (ATE) estimation in causal inference? This work addresses the question under several assumptions:
+
+1. Discrete covariates
+2. No post-treatment covariates
+3. No unmeasured confounding
+
+In this case, a stratification estimator that estimates and re-aggregates the treatment-control contrasts $\bar{Y}_{Z=1,X=x} - \bar{Y}_{Z=0,X=x}$ for each unique x in the covariate space will identify the ATE.
+
+The paper fuses three frameworks for doing causal inference (Causal DAGs, Potential Outcomes, and Structural Equations) and uses important concepts from each framework. We establish some theory on minimality and optimality of adjustment sets and then illustrate the problems and pitfalls of feature selection in a series of examples.
+
+---
+
+## Statistical Aspects of SHAP: Functional ANOVA for Model Interpretation
+
+**Herren, A. & Hahn, P. R. (2022)**
+
+*arXiv* | [Paper](https://arxiv.org/abs/2208.09970) | [Code](https://github.com/andrewherren/shap-anova-examples)
+
+[SHAP](https://github.com/slundberg/shap) (Lundberg and Lee 2017) is a popular tool for assessing feature importance in machine learning models. This paper looks at some of the statistical challenges that present themselves in estimating SHAP scores:
+
+1. How many synthetic samples to generate and pass through the model's prediction function (and by what sampling scheme)
+2. How to choose a reference distribution for the averaging taking place in each of the synthetic samples
+
+In investigating these questions, the paper discusses several connections with the sensitivity analysis and design of experiments literature, in particular:
+
+- Functional ANOVA and the notion of *effective dimensionality* (Kucherenko et al 2009)
+- Fractional factorial designs and the hypothesis of *factor sparsity* (Box and Meyer 1986)
+
+---
+
+## Semi-supervised learning and the question of true versus estimated propensity scores
+
+**Herren, A. & Hahn, P. R. (2020)**
+
+*arXiv* | [Paper](https://arxiv.org/abs/2009.06183) | [Code](https://github.com/andrewherren/semi-supervised-propensity)
+
+Suppose we have data:
+
+- $Y$: an outcome of interest
+- $Z$: a treatment that may (or may not) causally impact the outcome
+- $X$: a set of control variables that may be related to $Z$, $Y$, or both
+
+and suppose we're willing to make all of the assumptions that would allow us to identify and estimate a causal effect of $Z$ on $Y$ after adjusting for $X$.
+
+If we were given a large amount of data from the same distribution, but without $Y$ observed ("unlabeled data"), can we use that data in our estimate of the causal effect?
+
+The answer, it turns out, is "yes!" but the explanation is somewhat more subtle than "more data is always better." This paper explores the challenges and opportunities that come with doing causal inference on "unlabeled data."

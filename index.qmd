@@ -1,0 +1,12 @@
+---
+title: "About me"
+---
+
+::: {.about-section}
+
+![](images/profile.jpg){.profile-photo}
+
+::: {.about-text}
+I am a Postdoctoral Fellow at the University of Texas at Austin, working with [Jared Murray](https://jaredsmurray.github.io/). Prior to joining UT, I received my PhD in Statistics at Arizona State University, under [Richard Hahn](https://math.la.asu.edu/~prhahn/)'s supervision. My research interests center around machine learning for causal inference. 
+
+I built and continue to maintain [stochtree](https://stochtree.ai/) which provides flexible stochastic decision tree ensembles for supervised learning and causal inference in R and Python APIs. I am very interested in high-performance computing and hardware acceleration, particularly techniques that can speed up tree-based algorithms.
