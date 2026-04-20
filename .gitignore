@@ -2,6 +2,6 @@ _site/
 /.quarto/
 _freeze/
 .DS_Store
-
+*.claude/
 
 **/*.quarto_ipynb
