@@ -2,6 +2,12 @@
 title: "Talks"
 ---
 
+## Statistical Aspect of SHAP: Functional ANOVA for Model Interpretation
+
+**November 10, 2023** | University of Texas at Austin, Austin, Texas
+
+Presented as part of the [Fall 2023 UT SDS Seminar Series](https://stat.utexas.edu/events/seminar-series/sds-seminar-series-drew-herren).
+
 ## Feature selection for learning causal effects: a finite-sample, stratification estimator perspective
 
 **August 12, 2022** | Washington University in St. Louis, St. Louis, Missouri

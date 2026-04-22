@@ -25,6 +25,16 @@ Data Science Intern (Summer 2020)
 ### Cornerstone Research
 Analyst (Summer 2012 - Summer 2014)
 
+## Skills
+
+Programming:
+- C / C++
+- Python
+- R
+
+Product Management:
+- Build, maintain, and develop "product discipline" (including [RFC process](https://github.com/StochasticTree/rfcs)) for [stochtree](https://stochtree.ai/) (open-source decision tree software suite)
+
 ## Teaching
 
 - **MAT 270** (Calculus with Analytic Geometry I) Recitation, Fall 2020

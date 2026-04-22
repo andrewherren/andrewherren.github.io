@@ -8,7 +8,28 @@ title: "Software"
 
 Its primary interface is a "batteries-included" implementation of both the [BART](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-1/BART-Bayesian-additive-regression-trees/10.1214/09-AOAS285.full) model for supervised learning and the [BCF](https://projecteuclid.org/journals/bayesian-analysis/volume-15/issue-3/Bayesian-Regression-Tree-Models-for-Causal-Inference--Regularization-Confounding/10.1214/19-BA1195.full) model for causal inference.
 
-It also offers a flexible "low-level" interface for specifying custom models that involve stochastic tree ensemble terms. The underlying implementation is largely in C++ with tree classes and I/O routines borrowed from [xgboost](https://xgboost.readthedocs.io/en/stable/) and [LightGBM](https://lightgbm.readthedocs.io/en/stable/). See [here](https://github.com/StochasticTree/stochtree/) for stochtree's source repo.
+It also offers a flexible "low-level" interface for specifying custom models that involve stochastic tree ensemble terms. Think [PyTorch](https://pytorch.org/), but for trees. That's the vision.
+
+The underlying implementation is largely in C++ with tree classes and I/O routines borrowed from [xgboost](https://xgboost.readthedocs.io/en/stable/) and [LightGBM](https://lightgbm.readthedocs.io/en/stable/). See [here](https://github.com/StochasticTree/stochtree/) for stochtree's source repo.
+
+---
+
+## faststochtree
+
+[faststochtree](https://github.com/andrewherren/faststochtree) is a performance-optimized implementation of stochtree's core models, fine-tuned for fast sampling on Apple Silicon machines. It is mostly optimized for efficient CPU execution, but it was inspired by Giacomo Petrillo's [bartz](https://github.com/bartz-org/bartz) project which implements a GPU-accelerated version of BART using [jax](https://github.com/jax-ml/jax).
+
+On a benchmark dataset with 50k observations and 50 features, 
+
+* `stochtree` takes 3 minutes to run 1200 iterations of the BART sampler, while `faststochtree` does the same in 28 seconds,
+* `stochtree` takes 80 seconds to run 1200 iterations of the XBART sampler, while `faststochtree` does the same in 23 seconds.
+
+---
+
+## sgemm_silicon
+
+[sgemm_silicon](https://github.com/andrewherren/sgemm_silicon) is an experimental / didactic low-level implementation of matrix multiplication on Apple Silicon hardware, inspired by Amanzhol Salykov's work on [x86 CPUs](https://salykova.github.io/gemm-cpu) and [Nvidia GPUs](https://salykova.github.io/gemm-gpu).
+
+I haven't yet worked through the GPU implementation on Metal, but my CPU implementation reaches about 1/4 of the FLOPS of [Accelerate's cblas_sgemm routine](https://developer.apple.com/documentation/accelerate/1513264-cblas_sgemm), which owes in part to Accelerate's access to undocumented "AMX" instructions (see [here](https://github.com/corsix/amx) for some third-party research into this instruction set). My implementation outperforms both [Eigen](https://libeigen.gitlab.io/) and [MLX](https://mlx-framework.org/) in terms of FLOPS.
 
 ---
 

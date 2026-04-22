@@ -2,6 +2,36 @@
 title: "Research"
 ---
 
+## StochTree: BART-based modeling in R and Python
+
+**Herren, A., Hahn, P.R., Murray, J. & Carvalho, C (2025)**
+
+*arXiv* | [Paper](https://arxiv.org/abs/2512.12051)
+
+stochtree is a C++ library for Bayesian tree ensemble models such as BART and Bayesian Causal Forests (BCF), as well as user-specified variations. Unlike previous BART packages, stochtree provides bindings to both R and Python for full interoperability. stochtree boasts a more comprehensive range of models relative to previous packages, including heteroskedastic forests, random effects, and treed linear models. Additionally, stochtree offers flexible handling of model fits: the ability to save model fits, reinitialize models from existing fits (facilitating improved model initialization heuristics), and pass fits between R and Python. On both platforms, stochtree exposes lower-level functionality, allowing users to specify models incorporating Bayesian tree ensembles without needing to modify C++ code. We illustrate the use of stochtree in three settings: i) straightfoward applications of existing models such as BART and BCF, ii) models that include more sophisticated components like heteroskedasticity and leaf-wise regression models, and iii) as a component of custom MCMC routines to fit nonstandard tree ensemble models.
+
+---
+
+## Deep Learning for Causal Inference: A Comparison of Architectures for Heterogeneous Treatment Effect Estimation
+
+**Papakostas, D., Herren, A., Hahn, P.R. & Castillo, K (2024)**
+
+*arXiv* | [Paper](https://arxiv.org/abs/2405.03130)
+
+This work began as an in-depth comparison of neural network architectures for causal inference for a PhD course taken by three of its authors. Credit for polishing it and adding an in-depth study of a sleep dataset owes to Demetri Papakostas. This work ultimately convinced me of the importance of decision trees for tabular datasets (which underpin many causal inference problems) and motivated my work on BART / BCF.
+
+---
+
+## On true versus estimated propensity scores for treatment effect estimation with discrete controls
+
+**Herren, A. & Hahn, P. R.(2023)**
+
+*arXiv* | [Paper](https://arxiv.org/abs/2305.11163)
+
+The finite sample variance of an inverse propensity weighted estimator is derived in the case of discrete control variables with finite support. The obtained expressions generally corroborate widely-cited asymptotic theory showing that estimated propensity scores are superior to true propensity scores in the context of inverse propensity weighting. However, similar analysis of a modified estimator demonstrates that foreknowledge of the true propensity function can confer a statistical advantage when estimating average treatment effects.
+
+---
+
 ## Feature selection in stratification estimators of causal effects
 
 **Hahn, P. R. & Herren, A. (2022)**
