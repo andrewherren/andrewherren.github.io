@@ -1,6 +1,6 @@
 ---
 title: "How fast can we make BART on a laptop?"
-date: 2026-04-17
+date: 2026-04-21
 categories: [BART, XBART, C++, CPU, GPU, stochtree]
 ---
 
@@ -451,7 +451,6 @@ The most impactful runtime performance optimizations for XBART appear to be
 
 1. Future blog posts will explore the challenges / difficulties of achieving a substantial speedup on the Apple Silicon GPU for both algorithms
 2. Development roadmap for `faststochtree`:
-  * Adding R and Python bindings to the code so that these fast BART / XBART algorithms can be more easily run on real data
   * Support for ordered categorical covariates
   * Extending the fast BART implementation to a two forest "fast BCF" interface for causal inference use cases
 3. Development roadmap for `stochtree`:
@@ -459,4 +458,4 @@ The most impactful runtime performance optimizations for XBART appear to be
   * XBART: given the performance impact of histograms for split evaluation, it would be nice to gauge the extent to which this helps `stochtree`
 
 [^1]: It is fair to say that the algorithm is only viable with pre-sorted covariates
-[^2]: The code checks for the availability of NEON instructions with `#ifdef __ARM_NEON`
+[^2]: The code checks for the availability of NEON instructions with `#ifdef __ARM_NEON` and for compatibility with `__builtin_prefetch` with `#ifdef __GNUC__`, so it still works on all major platforms
