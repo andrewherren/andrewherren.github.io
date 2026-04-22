@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Software – Drew Herren</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -32,15 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -131,6 +133,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#stochtree" id="toc-stochtree" class="nav-link active" data-scroll-target="#stochtree">stochtree</a></li>
+  <li><a href="#faststochtree" id="toc-faststochtree" class="nav-link" data-scroll-target="#faststochtree">faststochtree</a></li>
+  <li><a href="#sgemm_silicon" id="toc-sgemm_silicon" class="nav-link" data-scroll-target="#sgemm_silicon">sgemm_silicon</a></li>
   <li><a href="#scikit-tree" id="toc-scikit-tree" class="nav-link" data-scroll-target="#scikit-tree">scikit-tree</a></li>
   <li><a href="#implementations" id="toc-implementations" class="nav-link" data-scroll-target="#implementations">implementations</a></li>
   </ul>
@@ -162,7 +166,24 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="stochtree">stochtree</h2>
 <p><a href="https://stochtree.ai/">stochtree</a> is a general-purpose R and Python library for stochastic tree ensemble modeling.</p>
 <p>Its primary interface is a “batteries-included” implementation of both the <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-1/BART-Bayesian-additive-regression-trees/10.1214/09-AOAS285.full">BART</a> model for supervised learning and the <a href="https://projecteuclid.org/journals/bayesian-analysis/volume-15/issue-3/Bayesian-Regression-Tree-Models-for-Causal-Inference--Regularization-Confounding/10.1214/19-BA1195.full">BCF</a> model for causal inference.</p>
-<p>It also offers a flexible “low-level” interface for specifying custom models that involve stochastic tree ensemble terms. The underlying implementation is largely in C++ with tree classes and I/O routines borrowed from <a href="https://xgboost.readthedocs.io/en/stable/">xgboost</a> and <a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a>. See <a href="https://github.com/StochasticTree/stochtree/">here</a> for stochtree’s source repo.</p>
+<p>It also offers a flexible “low-level” interface for specifying custom models that involve stochastic tree ensemble terms. Think <a href="https://pytorch.org/">PyTorch</a>, but for trees. That’s the vision.</p>
+<p>The underlying implementation is largely in C++ with tree classes and I/O routines borrowed from <a href="https://xgboost.readthedocs.io/en/stable/">xgboost</a> and <a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a>. See <a href="https://github.com/StochasticTree/stochtree/">here</a> for stochtree’s source repo.</p>
+<hr>
+</section>
+<section id="faststochtree" class="level2">
+<h2 class="anchored" data-anchor-id="faststochtree">faststochtree</h2>
+<p><a href="https://github.com/andrewherren/faststochtree">faststochtree</a> is a performance-optimized implementation of stochtree’s core models, fine-tuned for fast sampling on Apple Silicon machines. It is mostly optimized for efficient CPU execution, but it was inspired by Giacomo Petrillo’s <a href="https://github.com/bartz-org/bartz">bartz</a> project which implements a GPU-accelerated version of BART using <a href="https://github.com/jax-ml/jax">jax</a>.</p>
+<p>On a benchmark dataset with 50k observations and 50 features,</p>
+<ul>
+<li><code>stochtree</code> takes 3 minutes to run 1200 iterations of the BART sampler, while <code>faststochtree</code> does the same in 28 seconds,</li>
+<li><code>stochtree</code> takes 80 seconds to run 1200 iterations of the XBART sampler, while <code>faststochtree</code> does the same in 23 seconds.</li>
+</ul>
+<hr>
+</section>
+<section id="sgemm_silicon" class="level2">
+<h2 class="anchored" data-anchor-id="sgemm_silicon">sgemm_silicon</h2>
+<p><a href="https://github.com/andrewherren/sgemm_silicon">sgemm_silicon</a> is an experimental / didactic low-level implementation of matrix multiplication on Apple Silicon hardware, inspired by Amanzhol Salykov’s work on <a href="https://salykova.github.io/gemm-cpu">x86 CPUs</a> and <a href="https://salykova.github.io/gemm-gpu">Nvidia GPUs</a>.</p>
+<p>I haven’t yet worked through the GPU implementation on Metal, but my CPU implementation reaches about 1/4 of the FLOPS of <a href="https://developer.apple.com/documentation/accelerate/1513264-cblas_sgemm">Accelerate’s cblas_sgemm routine</a>, which owes in part to Accelerate’s access to undocumented “AMX” instructions (see <a href="https://github.com/corsix/amx">here</a> for some third-party research into this instruction set). My implementation outperforms both <a href="https://libeigen.gitlab.io/">Eigen</a> and <a href="https://mlx-framework.org/">MLX</a> in terms of FLOPS.</p>
 <hr>
 </section>
 <section id="scikit-tree" class="level2">

@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-04-21">
+
+<title>How fast can we make BART on a laptop? – Drew Herren</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Drew Herren</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why" id="toc-why" class="nav-link active" data-scroll-target="#why">Why?</a></li>
+  <li><a href="#how" id="toc-how" class="nav-link" data-scroll-target="#how">How?</a></li>
+  <li><a href="#a-fast-bart-mcmc-sampler" id="toc-a-fast-bart-mcmc-sampler" class="nav-link" data-scroll-target="#a-fast-bart-mcmc-sampler">A Fast BART MCMC Sampler</a>
+  <ul class="collapse">
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#comparison-to-existing-software" id="toc-comparison-to-existing-software" class="nav-link" data-scroll-target="#comparison-to-existing-software">Comparison to existing software</a></li>
+  <li><a href="#bart-performance-scaffold" id="toc-bart-performance-scaffold" class="nav-link" data-scroll-target="#bart-performance-scaffold">BART Performance Scaffold</a></li>
+  </ul></li>
+  <li><a href="#a-fast-xbart-grow-from-root-sampler" id="toc-a-fast-xbart-grow-from-root-sampler" class="nav-link" data-scroll-target="#a-fast-xbart-grow-from-root-sampler">A Fast XBART / Grow-From-Root Sampler</a>
+  <ul class="collapse">
+  <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1">Results</a></li>
+  <li><a href="#comparison-to-existing-software-1" id="toc-comparison-to-existing-software-1" class="nav-link" data-scroll-target="#comparison-to-existing-software-1">Comparison to existing software</a></li>
+  <li><a href="#xbart-performance-scaffold" id="toc-xbart-performance-scaffold" class="nav-link" data-scroll-target="#xbart-performance-scaffold">XBART Performance Scaffold</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a>
+  <ul class="collapse">
+  <li><a href="#bart" id="toc-bart" class="nav-link" data-scroll-target="#bart">BART</a></li>
+  <li><a href="#xbart" id="toc-xbart" class="nav-link" data-scroll-target="#xbart">XBART</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How fast can we make BART on a laptop?</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">BART</div>
+    <div class="quarto-category">XBART</div>
+    <div class="quarto-category">C++</div>
+    <div class="quarto-category">CPU</div>
+    <div class="quarto-category">GPU</div>
+    <div class="quarto-category">stochtree</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 21, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In which I use Claude Code to build a streamlined version of BART that runs 20x faster than the naive implementation on an M1 Macbook Pro.</p>
+<section id="why" class="level2">
+<h2 class="anchored" data-anchor-id="why">Why?</h2>
+<p>Tree ensembles have played a big role in my career, both in my PhD research and my postdoc work. I built <a href="https://stochtree.ai/">stochtree</a> with my collaborators to make it easier and faster to fit <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-1/BART-Bayesian-additive-regression-trees/10.1214/09-AOAS285.full">BART</a>-based models in R and Python.</p>
+<p>What is BART, you ask? Think of it as the Bayesian version of <a href="https://github.com/dmlc/xgboost">xgboost</a> or <a href="https://github.com/lightgbm-org/LightGBM">lightgbm</a>. Why use it, instead of one of those two?</p>
+<ol type="1">
+<li>It’s straightforward to compose BART models with other modeling components like linear regression or random effects, especially using <a href="https://stochtree.ai/vignettes/custom-sampling.html">stochtree’s low-level interface</a></li>
+<li>It returns a distribution of models, not a single model like xgboost, which allows for uncertainty intervals and advanced interpretability methods like <a href="https://www.tandfonline.com/doi/abs/10.1080/10618600.2020.1796684">posterior summarization</a></li>
+</ol>
+<p>For more detail, <a href="https://stochtree.ai/about.html">this post</a> gives a brief overview of “stochastic tree models” and the original <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-1/BART-Bayesian-additive-regression-trees/10.1214/09-AOAS285.full">BART</a> and <a href="https://arxiv.org/abs/2002.03375">XBART</a> papers are great references.</p>
+<p>The main “downside” of BART-based models is that they require sampling a large number of tree ensembles, as opposed to fitting a single ensemble as with xgboost and lightgbm. Some of this “cost” is recovered by the fact that gradient boosting libraries require a lot hyperparameter tuning. But from a pure software optimization standpoint, xgboost and lightgbm are undeniably ahead. Both have hundreds of contributors on Github across thousands of commits. Most BART packages (<a href="https://cran.r-project.org/web/packages/BART/index.html">BART</a>, <a href="https://github.com/StochasticTree/stochtree/">stochtree</a>, <a href="https://github.com/vdorie/dbarts">dbarts</a>, <a href="https://github.com/skdeshpande91/flexBART">flexBART</a>) are developed and maintained by a small number of academic researchers and industry collaborators.</p>
+<p>The central question of this project is – how much faster <strong>could</strong> we fit BART models if we were optimizing for low-level performance alone, like xgboost and lightgbm?</p>
+<p>Giacomo Petrillo’s <a href="https://github.com/bartz-org/bartz">bartz</a> project implements a minimalist BART model in <a href="https://github.com/jax-ml/jax">jax</a> for some very impressive GPU performance gains. Seeing what was possible with CUDA / Jax led me to wonder whether similar performance gains can be made on Apple Silicon using C++ alone. I wanted this for two reasons:</p>
+<ol type="1">
+<li>Apple Silicon laptops / desktops are extremely common in tech and academia, so it stands to reason that users would find value in a fast BART library that makes full use of their laptop hardware</li>
+<li>Building the project in pure C++ enables linkage to either R or Python (or other languages if we expose a C API), and many of our users prefer R</li>
+</ol>
+</section>
+<section id="how" class="level2">
+<h2 class="anchored" data-anchor-id="how">How?</h2>
+<p><em>[Enter Claude]</em></p>
+<p>Like much of the internet, I began to discover <a href="https://code.claude.com/docs/en/overview">Claude Code</a> in late 2025 / early 2026 and gradually began using it for more and more advanced development work.</p>
+<p>Eventually I decided to see if I could use Claude to mirror bartz’s performance boost on Apple Silicon. My first thought was to simply replace jax with <a href="https://github.com/ml-explore/mlx/">mlx</a>, but the API and computation model of the two frameworks differ enough to make that a nonstarter. So then I tried to get Claude to adapt bartz’s “branchless” BART model to the Apple Silicon GPU via <a href="https://developer.apple.com/metal/">metal</a>. Initial results were not very promising on the GPU, for reasons that I will explain on a future blog post.</p>
+<p>From there, the goal shifted. Apple Silicon machines have excellent CPUs; why not fine tune the algorithm for fast laptop-based CPU performance?</p>
+<p>After several sessions of prompting and guidance, Claude had generated a speedy CPU BART sampler. The end result alone was already worthwhile – a fast BART sampler in a few thousand lines of C++ which could be linked to R or Python.</p>
+<p>Ultimately, though, I am interested in figuring out what makes <code>stochtree</code> relatively slow, and what, if anything, can be done about that. So I prompted a “scaffolded” rollout of the performance tricks that made BART relatively fast on my Macbook Pro, to assess their individual effect.</p>
+</section>
+<section id="a-fast-bart-mcmc-sampler" class="level2">
+<h2 class="anchored" data-anchor-id="a-fast-bart-mcmc-sampler">A Fast BART MCMC Sampler</h2>
+<p>Armed with a fast working implementation of BART, I wanted to decompose it into a series of specific improvements to gauge what has the biggest impact. I prompted Claude to start with a “naive” implementation of BART written in as little code as possible without any obvious performance tricks.</p>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p>We’ll talk about the results first, rather than make you read through several pages of C++ minutiae. All benchmarks are run on an Apple M1 Max laptop with 10 cores and 64 GB RAM.</p>
+<p>We take BART from a “naive” working implementation that runs 1200 iterations (200 burnin + 1000 samples) of 200 trees on n = 50k, p = 50 in ~8 minutes to a fine-tuned version that runs 20x faster in 25 seconds.</p>
+<p><img src="speedup_bart.png" class="img-fluid"></p>
+<p>We see a minimal impact on the test set RMSE of the benchmark we ran (the true error standard deviation is 1), but it is noteworthy that some of the software improvements appear to “coarsen” the model fit slightly in a way that degrades performance. For many use cases, getting to an RMSE of 1.03 in 25 seconds is far better than an RMSE of 0.99 in 8 minutes, but it is worth noting that these runtime gains aren’t a one-off Pareto improvement.</p>
+<p><img src="rmse_bart.png" class="img-fluid"></p>
+</section>
+<section id="comparison-to-existing-software" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-to-existing-software">Comparison to existing software</h3>
+<p>We can compare the runtimes above to several common BART R packages: BART, stochtree, flexBART, and dbarts. While any comparison will not be completely apples-to-apples given <code>faststochtree</code> is a C++ CLI and each of the R packages has a slightly different sampling approach, we control what we can. We run the same number of samples of the same number of trees for the same data-generating process with the same dimensions.</p>
+<p>We can see in the table below that each of the R packages attains a slightly lower test-set RMSE, with <code>dbarts</code> and <code>flexBART</code> as the fastest implementations and <code>BART</code> as the slowest, while <code>faststochtree</code> is 3x faster than dbarts.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Mean runtime (s)</th>
+<th>Mean RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>faststochtree (v13)</td>
+<td>25</td>
+<td>1.01</td>
+</tr>
+<tr class="even">
+<td>dbarts</td>
+<td>73</td>
+<td>0.99</td>
+</tr>
+<tr class="odd">
+<td>flexBART</td>
+<td>107</td>
+<td>0.99</td>
+</tr>
+<tr class="even">
+<td>stochtree</td>
+<td>190</td>
+<td>0.99</td>
+</tr>
+<tr class="odd">
+<td>BART</td>
+<td>382</td>
+<td>0.99</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://colab.research.google.com/github/andrewherren/faststochtree/blob/main/bench/bench_bartz.ipynb">This colab notebook</a> allows for a quick run of this same benchmark dataset against bartz, which runs in roughly 11s on a T4 GPU for a similar test set RMSE.</p>
+</section>
+<section id="bart-performance-scaffold" class="level3">
+<h3 class="anchored" data-anchor-id="bart-performance-scaffold">BART Performance Scaffold</h3>
+<section id="v1-minimal-bart" class="level4">
+<h4 class="anchored" data-anchor-id="v1-minimal-bart">v1: Minimal BART</h4>
+<p>This implementation contains nothing more than the “bare bones” needed to run the BART MCMC sampler:</p>
+<ul>
+<li>Decision tree class, stored as a vector of node objects</li>
+<li>Forest class, stored as a vector of decision trees</li>
+<li>Covariates and outcome data, in <code>double</code> precision in C++ with covariates arranged in row-major fashion</li>
+<li>Data structures to store config (inputs) to BART, as well as sampler outputs</li>
+<li>Functions that accumulate sufficient statistics, compute log marginal likelihoods, and sample from the relevant posterior distributions</li>
+</ul>
+<p>No popular BART implementations I am aware of are this minimal – most include one or more of the performance boosts included later in this post.</p>
+</section>
+<section id="v2-storing-data-as-single-precision-float" class="level4">
+<h4 class="anchored" data-anchor-id="v2-storing-data-as-single-precision-float">v2: Storing data as single-precision <code>float</code></h4>
+<p>Computers store data in bits – 0s and 1s whose arrangement can store large integer or floating-point numbers. Floating point numbers stored as <code>double</code> occupy 64 bits while a <code>float</code> requires only 32 bits.</p>
+<p>For algorithms that process a large amount of floating point data, the size of each individual datum and the speed with which data can be loaded into the processor is often influential. And indeed, when we change nothing about our naive BART implementation except to replace <code>double</code> with <code>float</code> throughout the codebase, we see a roughly 1.4x improvement in the sampler’s runtime on a benchmark program, with a minimal impact on test-set RMSE.</p>
+</section>
+<section id="v3-quantizing-covariates" class="level4">
+<h4 class="anchored" data-anchor-id="v3-quantizing-covariates">v3: Quantizing covariates</h4>
+<p>Rather than store numeric covariates in their original floating-point scale, we can compute a predetermined number of quantiles for each covariate and store covariates in integer-valued “bins” defined by the quantile range of an observation’s raw floating point value. This transformation converted covariates from <code>float</code> to <code>uint8_t</code>, further simplifying their storage and processing.</p>
+<p>v3 yields a ~1.8x runtime improvement over v1 on the same benchmark, with a similar small impact on RMSE.</p>
+<p>We note that several popular BART libraries use this technique (though not <code>stochtree</code> at the moment).</p>
+</section>
+<section id="v4-column-major-storage" class="level4">
+<h4 class="anchored" data-anchor-id="v4-column-major-storage">v4: Column-major storage</h4>
+<p>Row-major storage turns a matrix into a flat array row-by-row, so that the <code>(i, j)</code> element of the matrix is accessed from the <code>i * num_cols + j</code> element of the flat array. Column major storage inverts this, so that the <code>(i,j)</code> element of a matrix is accessed via the <code>j * num_rows + i</code> element of the flat array.</p>
+<p>When we switch from row-major to column-major storage for the covariates, we obtain essentially no improvement over v3. (Though column-major storage matters much more for the XBART algorithm, which we’ll discuss later.)</p>
+</section>
+<section id="v5-fixed-depth-trees" class="level4">
+<h4 class="anchored" data-anchor-id="v5-fixed-depth-trees">v5: Fixed-depth trees</h4>
+<p>One of the key design decisions of <code>bartz</code> was to use trees of a fixed maximum depth. This is in part because the storage requirements of the model become predictable and can be pre-allocated and in part because it enables a “branchless” version of the tree traversal algorithm (see the next section).</p>
+<p>Fixing the depth of a tree at <span class="math inline">\(k\)</span> allows us to store the decision tree differently. With a maximum of <span class="math inline">\(2^{k+1} - 1\)</span> nodes, we can pre-allocate several parallel arrays that store the information for these nodes. Each node indexed by <code>idx</code> is stored such that its left node is stored at <code>2*idx+1</code> and its right node is stored at <code>2*idx+2</code>. <code>faststochtree</code> defaults to a max depth of <code>k=6</code>, as with <code>bartz</code>.</p>
+<p>We find that fixing the depth of the trees and the associated storage changes on their own provide almost no performance improvement over v3 and v4 on an apple silicon CPU, but do lead to a minor-but-noticeable worsening of test-set RMSE.</p>
+</section>
+<section id="v6-branchless-traversal" class="level4">
+<h4 class="anchored" data-anchor-id="v6-branchless-traversal">v6: Branchless traversal</h4>
+<p>Determining the leaf node index for observation <code>i</code> from a covariate matrix <code>X</code> for a tree <code>tree</code> requires “traversing” the tree, as in the pseudocode below</p>
+<pre class="pseudocode"><code>node = tree.root
+while node is not leaf:
+    split_variable = node.split_variable
+    split_threshold = node.split_threshold
+    if X[i, split_variable] &lt;= split_threshold:
+        node = node.left
+    else:
+        node = node.right</code></pre>
+<p>Branched computation like this requires a processor to selectively execute one instruction or another based on the output of a previous instruction. This can be a problem for CPUs, which <a href="https://en.wikipedia.org/wiki/Branch_predictor">attempt to predict which branch will execute</a> and pre-load its instructions, and even more so for GPUs, where <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#thread-blocks-and-grids">thread groups (or warps in CUDA parlance) load and execute the same instructions on multiple threads</a>.</p>
+<p>With fixed-depth trees, the while loop above can be converted to a for loop (where <code>split_variables</code> and <code>split_thresholds</code> are now two parallel arrays) (see <a href="https://arxiv.org/abs/2410.23244">Petrillo (2025)</a> for more detail)</p>
+<pre class="pseudocode"><code>node_idx = 0
+is_leaf = False
+for depth in 0 to max_depth - 1:
+    split_variable = split_variable[node_idx]
+    split_threshold = split_threshold[node_idx]
+    is_leaf = is_leaf or split_threshold = 0
+    next_node_idx = 2 * node_idx + 1 + (X[i, split_variable] &gt; split_threshold)
+    node_idx = node_idx if is_leaf else next_node_idx</code></pre>
+<p>Note that <code>split_threshold = 0</code> is a <a href="https://en.wikipedia.org/wiki/Sentinel_value">sentinel value</a> that indicates a leaf node, as covariates have already been coarsened to quantile bins.</p>
+<p>We see that on CPU without any special accommodations for parallelism or hardware acceleration, this branchless traversal is actually slower (because it does strictly more work than v5).</p>
+</section>
+<section id="v7-leaf-node-caching" class="level4">
+<h4 class="anchored" data-anchor-id="v7-leaf-node-caching">v7: Leaf node caching</h4>
+<p>All of the BART implementations up to this point have had to re-traverse a tree at each MCMC proposal step to determine which observations fall into a given node (so that the data in this node can be used for a grow / prune proposal). This update adds a leaf cache vector that stores the node index of every training set observation in every tree, so that determining whether element <code>i</code> falls into node <code>k</code> does not require a tree traversal (which has logarithmic complexity in the depth of a tree).</p>
+<p>This update provides the biggest performance boost observed so far, since we avoid a costly per-update traversal. Note that many popular BART libraries, including <code>stochtree</code>, do some version of this.</p>
+</section>
+<section id="v8-scatter-buffer" class="level4">
+<h4 class="anchored" data-anchor-id="v8-scatter-buffer">v8: Scatter buffer</h4>
+<p>The original “unoptimized” implementation of BART updated leaf nodes after each tree step by placing the sufficient statistics of each leaf into a <code>std::unordered_map</code> (a lookup table) and accumulating sufficient statistics into the relevant portion of the table. Replacing this lookup table with two parallel vectors with elements for each leaf node cuts runtime from v7 almost in half, for an overall 8.2x speedup over the “naive” implementation.</p>
+<p>As with v3 and v7, this technique is already implemented in many BART libraries.</p>
+</section>
+<section id="v9-multilane-accumulation" class="level4">
+<h4 class="anchored" data-anchor-id="v9-multilane-accumulation">v9: Multilane accumulation</h4>
+<p>The existing leaf node update code looks something like</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> k <span class="op">=</span> leaf_idx<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    sum_buf<span class="op">[</span>k<span class="op">]</span> <span class="op">+=</span> resid<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    cnt_buf<span class="op">[</span>k<span class="op">]++;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> k <span class="op">&lt;</span> sz<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>cnt_buf<span class="op">[</span>k<span class="op">]</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">continue</span><span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> post_mean <span class="op">=</span> <span class="op">(</span>tau <span class="op">*</span> sum_buf<span class="op">[</span>k<span class="op">])</span> <span class="op">/</span> <span class="op">(</span>cnt_buf<span class="op">[</span>k<span class="op">]</span> <span class="op">*</span> tau <span class="op">+</span> sigma2<span class="op">);</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> post_var  <span class="op">=</span> <span class="op">(</span>tau <span class="op">*</span> sigma2<span class="op">)</span>      <span class="op">/</span> <span class="op">(</span>cnt_buf<span class="op">[</span>k<span class="op">]</span> <span class="op">*</span> tau <span class="op">+</span> sigma2<span class="op">);</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    tree<span class="op">.</span>leaf_value<span class="op">[</span>k<span class="op">]</span> <span class="op">=</span> post_mean <span class="op">+</span> <span class="bu">std::</span>sqrt<span class="op">(</span>post_var<span class="op">)</span> <span class="op">*</span> rng<span class="op">.</span>normal<span class="op">();</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This has a data dependency known as <a href="https://en.wikipedia.org/wiki/Load-Hit-Store">Load-Hit-Store</a> or “store-to-load hazard.” CPUs generally try to work efficiently through sequential operations like the loop above with <a href="https://en.wikipedia.org/wiki/Instruction_pipelining">instruction pipelining</a>, where instructions are overlapped as much as possible. But an operation like <code>sum_buf[k] += resid[i];</code> requires determining the location of <code>sum_buf[k]</code>, loading its value, modifying it, and storing the updated value in <code>sum_buf[k]</code>. Iteration <code>i</code> and iteration <code>i+1</code> both depend on arbitrary access to the <code>sum_buf</code> buffer, so the CPU must account for the possibility of waiting for the store of <code>sum_buf[leaf_idx[i]]</code> to complete before loading <code>sum_buf[leaf_idx[i+1]]</code> when <code>leaf_idx[i] == leaf_idx[i+1]</code>.</p>
+<p>This can be partially mitigated with “multi-lane accumulation,” in which several buffers are updated independently and then merged at the end, like below:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>   sz  <span class="op">=</span> tree<span class="op">.</span>full_size <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="co">// Cannot be more than 128</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> s0<span class="op">[</span><span class="dv">128</span><span class="op">]={},</span> s1<span class="op">[</span><span class="dv">128</span><span class="op">]={},</span> s2<span class="op">[</span><span class="dv">128</span><span class="op">]={},</span> s3<span class="op">[</span><span class="dv">128</span><span class="op">]={};</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>   c0<span class="op">[</span><span class="dv">128</span><span class="op">]={},</span> c1<span class="op">[</span><span class="dv">128</span><span class="op">]={},</span> c2<span class="op">[</span><span class="dv">128</span><span class="op">]={},</span> c3<span class="op">[</span><span class="dv">128</span><span class="op">]={};</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> n4 <span class="op">=</span> <span class="op">(</span>n <span class="op">/</span> <span class="dv">4</span><span class="op">)</span> <span class="op">*</span> <span class="dv">4</span><span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n4<span class="op">;</span> i <span class="op">+=</span> <span class="dv">4</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> l0 <span class="op">=</span> leaf_idx<span class="op">[</span>i<span class="op">],</span>   l1 <span class="op">=</span> leaf_idx<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">],</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        l2 <span class="op">=</span> leaf_idx<span class="op">[</span>i<span class="op">+</span><span class="dv">2</span><span class="op">],</span> l3 <span class="op">=</span> leaf_idx<span class="op">[</span>i<span class="op">+</span><span class="dv">3</span><span class="op">];</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    s0<span class="op">[</span>l0<span class="op">]</span> <span class="op">+=</span> resid<span class="op">[</span>i<span class="op">];</span>   c0<span class="op">[</span>l0<span class="op">]++;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    s1<span class="op">[</span>l1<span class="op">]</span> <span class="op">+=</span> resid<span class="op">[</span>i<span class="op">+</span><span class="dv">1</span><span class="op">];</span> c1<span class="op">[</span>l1<span class="op">]++;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    s2<span class="op">[</span>l2<span class="op">]</span> <span class="op">+=</span> resid<span class="op">[</span>i<span class="op">+</span><span class="dv">2</span><span class="op">];</span> c2<span class="op">[</span>l2<span class="op">]++;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    s3<span class="op">[</span>l3<span class="op">]</span> <span class="op">+=</span> resid<span class="op">[</span>i<span class="op">+</span><span class="dv">3</span><span class="op">];</span> c3<span class="op">[</span>l3<span class="op">]++;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> n4<span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> k <span class="op">=</span> leaf_idx<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    s0<span class="op">[</span>k<span class="op">]</span> <span class="op">+=</span> resid<span class="op">[</span>i<span class="op">];</span> c0<span class="op">[</span>k<span class="op">]++;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> k <span class="op">&lt;</span> sz<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>   cnt <span class="op">=</span> c0<span class="op">[</span>k<span class="op">]</span> <span class="op">+</span> c1<span class="op">[</span>k<span class="op">]</span> <span class="op">+</span> c2<span class="op">[</span>k<span class="op">]</span> <span class="op">+</span> c3<span class="op">[</span>k<span class="op">];</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>cnt <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">continue</span><span class="op">;</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> sum <span class="op">=</span> s0<span class="op">[</span>k<span class="op">]</span> <span class="op">+</span> s1<span class="op">[</span>k<span class="op">]</span> <span class="op">+</span> s2<span class="op">[</span>k<span class="op">]</span> <span class="op">+</span> s3<span class="op">[</span>k<span class="op">];</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> post_mean <span class="op">=</span> <span class="op">(</span>tau <span class="op">*</span> sum<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>cnt <span class="op">*</span> tau <span class="op">+</span> sigma2<span class="op">);</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> post_var  <span class="op">=</span> <span class="op">(</span>tau <span class="op">*</span> sigma2<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>cnt <span class="op">*</span> tau <span class="op">+</span> sigma2<span class="op">);</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    tree<span class="op">.</span>leaf_value<span class="op">[</span>k<span class="op">]</span> <span class="op">=</span> post_mean <span class="op">+</span> <span class="bu">std::</span>sqrt<span class="op">(</span>post_var<span class="op">)</span> <span class="op">*</span> rng<span class="op">.</span>normal<span class="op">();</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This update provides another major computational step change in the BART performance scaffold, bringing total runtime down to 33 seconds for a 15x improvement over the naive implementation.</p>
+</section>
+<section id="v10-fused-scatter-gather" class="level4">
+<h4 class="anchored" data-anchor-id="v10-fused-scatter-gather">v10: Fused scatter-gather</h4>
+<p>BART samples a tree ensemble one tree at a time via <a href="https://hastie.su.domains/TALKS/gibbsgam.pdf">Bayesian backfitting</a>, where each tree <span class="math inline">\(j\)</span> fits the “partial residual” <span class="math inline">\(y_i - \sum_{k \neq j} g_k(X_i)\)</span> where <span class="math inline">\(\sum_{k \neq j} g_k(X_i)\)</span> is the prediction of every tree except <span class="math inline">\(j\)</span> for observation <span class="math inline">\(i\)</span>. Up to v9, this is done via four passes through the data:</p>
+<ol type="1">
+<li>Add stored <span class="math inline">\(g_j(X_i)\)</span> to the full residual for tree <span class="math inline">\(j\)</span>’s partial residual (<span class="math inline">\(y_i - \sum_{k \neq j} g_k(X_i)\)</span>)</li>
+<li>Accumulate sufficient statistics for model updates by reading directly from the partial residual</li>
+<li><em>[After updating the tree and its leaf values]</em> Store recomputed <span class="math inline">\(g_j(X_i)\)</span> for every <span class="math inline">\(i\)</span></li>
+<li>Subtract <span class="math inline">\(g_j(X_i)\)</span> from the partial residual for the “full residual” (outcome minus forest predictions)</li>
+</ol>
+<p>We can reduce this to two passes by storing predictions for every tree and every observation:</p>
+<ol type="1">
+<li>Accumulate sufficient statistics for model updates by reading the full residual for each observation and adding the stored <span class="math inline">\(g_j(X_i)\)</span></li>
+<li><em>[After updating the tree and its leaf values]</em> Store recomputed <span class="math inline">\(g_j(X_i)\)</span> for every <span class="math inline">\(i\)</span> and subtract the change in predicted value from the full residual</li>
+</ol>
+<p>This update does not offer any runtime improvement over v9, perhaps because the compiler is able to easily auto-vectorize the “extra” <span class="math inline">\(O(n)\)</span> residual passes in v9 or perhaps because each sufficient statistic update must access two vectors (the full residual and the prediction cache) which partially offsets the work reduction.</p>
+</section>
+<section id="v11-scratch-workspace-pre-allocation" class="level4">
+<h4 class="anchored" data-anchor-id="v11-scratch-workspace-pre-allocation">v11: Scratch workspace pre-allocation</h4>
+<p>This update pre-allocates a “workspace” with arrays for all of the sufficient statistic calculations to avoid new allocations for each tree update. We see that this offers little runtime improvement.</p>
+</section>
+<section id="v12-storing-leaf-node-counts" class="level4">
+<h4 class="anchored" data-anchor-id="v12-storing-leaf-node-counts">v12: Storing leaf node counts</h4>
+<p>Since the number of observations in a leaf node does not depend on the (forest-dependent) partial residual, these “counts” can be stored per-tree and retrieved during sampling operations, rather than recomputed with the outcome sufficient statistics.</p>
+<p>As with v11, this update does not improve the benchmark’s runtime.</p>
+</section>
+<section id="v13-sifted-leaf-node-observation-buffer" class="level4">
+<h4 class="anchored" data-anchor-id="v13-sifted-leaf-node-observation-buffer">v13: Sifted leaf node observation buffer</h4>
+<p>Every tree update requires a node-specific proposal (grow or prune) which means assembling the data that fall into a given node. Through v12 this was done by iterating through every observation and checking which observations fall into node <code>j</code>. We can alternatively maintain a buffer of observation indices, initially arranged in ascending order from 0 to <code>n-1</code>, which is partitioned each time a node is split so that the observations for node <code>j</code> can be determined by offsets into this buffer.</p>
+<p>Concretely, if we started with an observation buffer <code>[0,1,2,3,4,5,6]</code> and partitioned the root node so that observations 0, 3, and 4 are in the left node and 1, 2, 5, and 6 are in the right node, the buffer would sift into <code>[0,3,4,1,2,5,6]</code>, with “start index” offsets of <code>[0,0,3]</code> and “end index” offsets of <code>[7, 3, 7]</code> for nodes 0, 1 and 2.</p>
+<p>This update improves benchmark runtime from 36 seconds to 25 seconds. We note that several BART packages, including <code>stochtree</code>, include a variant of this technique.</p>
+</section>
+</section>
+</section>
+<section id="a-fast-xbart-grow-from-root-sampler" class="level2">
+<h2 class="anchored" data-anchor-id="a-fast-xbart-grow-from-root-sampler">A Fast XBART / Grow-From-Root Sampler</h2>
+<p><a href="https://arxiv.org/abs/2002.03375">XBART</a> is an adaptation of BART that incorporates elements of the “greedy” training approach of xgboost / lightgbm to fit a dataset in fewer iterations than would be required by a BART model. XBART’s greedy algorithm is called “grow-from-root” which I’ll sometimes abbreviate as GFR in this post for brevity. <code>stochtree</code> supports both BART and XBART interchangeably, and a common use case of XBART is to “warm-start” initialize a BART MCMC chain.</p>
+<p>Given the importance of XBART in my own work and to many of <code>stochtree</code>’s users, I also wanted to see how fast we can make this algorithm.</p>
+<section id="results-1" class="level3">
+<h3 class="anchored" data-anchor-id="results-1">Results</h3>
+<p>As with BART, we’ll talk about the results first, and all benchmarks are run on an Apple M1 Max laptop with 10 cores and 64 GB RAM.</p>
+<p>We take XBART from a “naive” working implementation that takes over 40 minutes to sample 40 iterations (15 burnin + 25 retained) of 200 trees on n = 50k, p = 50 to a fine-tuned version that runs 119x faster in 23 seconds.</p>
+<p><img src="speedup_gfr.png" class="img-fluid"></p>
+<p>We see a minimal impact on the test set RMSE of the benchmark we ran (the true error standard deviation is 1 as with the MCMC example). Note that <code>v1</code> is omitted from the RMSE comparison. With a runtime of &gt;40 mins, it was both unnecessary and prohibitive to run 30 iterations of the benchmark suite as with every other implementation. This makes its benchmark RMSE apples-and-oranges with the other versions. In terms of model fit, <code>v2</code> is materially the same implementation, just avoiding an obvious performance limitation.</p>
+<p><img src="rmse_gfr.png" class="img-fluid"></p>
+</section>
+<section id="comparison-to-existing-software-1" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-to-existing-software-1">Comparison to existing software</h3>
+<p>We can compare the runtimes above to two XBART R packages: <a href="https://github.com/JingyuHe/XBART">XBART</a> and <a href="https://stochtree.ai/">stochtree</a>. As with BART, comparisons between R packages and a C++ CLI are not completely apples-to-apples, but we make every effort to run the same number of samples of the same number of trees for the same data-generating process with the same dimensions.</p>
+<p>We can see in the table below that both of the R packages attain a slightly lower test-set RMSE, with <code>XBART</code> as the faster implementation.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Mean runtime (s)</th>
+<th>Mean RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>faststochtree (v13)</td>
+<td>23</td>
+<td>1.01</td>
+</tr>
+<tr class="even">
+<td>XBART</td>
+<td>39</td>
+<td>0.99</td>
+</tr>
+<tr class="odd">
+<td>stochtree</td>
+<td>87</td>
+<td>0.99</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="xbart-performance-scaffold" class="level3">
+<h3 class="anchored" data-anchor-id="xbart-performance-scaffold">XBART Performance Scaffold</h3>
+<section id="v1-naive-xbart" class="level4">
+<h4 class="anchored" data-anchor-id="v1-naive-xbart">v1: “Naive” XBART</h4>
+<p>We started with a “naive” implementation of XBART which follows the prescribed steps articulated in Algorithm 2 of <a href="https://arxiv.org/abs/2002.03375">the XBART paper</a> with no attempt at performance tuning. This implementation is based on the <code>faststochtree</code> infrastructure available as of MCMC <a href="#v11-scratch-workspace-pre-allocation">v11</a>, meaning it has:</p>
+<ol type="1">
+<li>Fixed-depth trees with a branchless traversal method,</li>
+<li>Quantized covariates (stored in a maximum of 255 quantile bins), and</li>
+<li>Multilane accumulation of sufficient statistics</li>
+</ol>
+<p><code>v1</code> earns its “naive” title with an average runtime of over 40 minutes! Note that this version was only benchmarked three times (as opposed to 30 for every other benchmark in this post), since the 40 minute runtime didn’t need many iterations to show its contrast.</p>
+</section>
+<section id="v2-presorted-features" class="level4">
+<h4 class="anchored" data-anchor-id="v2-presorted-features">v2: Presorted features</h4>
+<p>The XBART paper recommends <a href="https://numpy.org/doc/2.2/reference/generated/numpy.argsort.html">arg-sorting</a> features (i.e.&nbsp;arranging the data indices in a way that places each covariate’s values in ascending order) before performing the recursive scans that define the algorithm. The reason for this is made immediately clear by a runtime reduction from 41 minutes in <code>v1</code> to 2 minutes in <code>v2</code>!</p>
+<p>Note that both <code>stochtree</code> and <code>XBART</code> maintain covariate sort indices in their GFR implementations. Even though the GFR algorithm does not explicitly require pre-sorted covariates, the method as described in the paper is clear about the importance of presorted covariates for performance, and we should consider <code>v2</code> as the “starting point” of this experiment.</p>
+</section>
+<section id="v3-two-stage-cutpoint-sampling" class="level4">
+<h4 class="anchored" data-anchor-id="v3-two-stage-cutpoint-sampling">v3: Two-stage cutpoint sampling</h4>
+<p>The GFR algorithm enumerates a range of available split rules available to each node. The simplest way to do this is to consider splitting on each unique value of each variable in ascending order (except for the final value). If node <code>k</code> has <code>num_unique_k</code> unique values for each covariate (with quantized covariates <code>num_unique_k</code> is at most 255), then we evaluate <code>p * (num_unique_k - 1)</code> potential splits (where <code>p</code> is the number of features) and store as many log-likelihoods in a vector. After appending a “no-split” log-likelihood, we take a weighted draw from this vector to define the next move (split or no-split).</p>
+<p>Rather than sample the split rule in a single step, with every combination of feature and split value enumerated and evaluated, we can run the same procedure in two stages:</p>
+<ol type="1">
+<li>Compute each feature’s total split log-likelihood, sample a feature to split based on these values</li>
+<li>Enumerate split rule candidates for the selected feature and sample a new split rule from the available candidates</li>
+</ol>
+<p>This update induces a fairly significant performance regression (runtime increases ~3.5x), and it’s worth understanding why. Setting up the “stage 1” sampling step has a higher overhead than simply populating a vector of length <code>p * (num_unique_k - 1)</code> as in <code>v1</code>/<code>v2</code>, because this is a fairly “naive” implementation of the two-stage approach, which will be refined in later iterations. Specifically,</p>
+<ul>
+<li>memory is still allocated for <code>p * (num_unique_k - 1)</code> split evaluations, but it’s done as a vector-of-vectors which is re-allocated frequently rather than a single large vector,</li>
+<li>the two-stage approach makes three passes of the data per feature in a node where the first approach made a single pass per feature,</li>
+<li>a maximum log-likelihood is computed online during one of the data passes, which “branches” the inner loop and makes the code less vectorizable.</li>
+</ul>
+<p>So why not revert to <code>v2</code>? We will see that the infrastructure of <code>v3</code> enables several future experiments and optimizations. (<strong>Note</strong>: it is on the agenda to see whether the <code>v3</code> update can be sidestepped entirely, with some of the later optimizations folded directly into <code>v2</code>.)</p>
+</section>
+<section id="v4-pre-gathering-residuals-before-cutpoint-scans" class="level4">
+<h4 class="anchored" data-anchor-id="v4-pre-gathering-residuals-before-cutpoint-scans">v4: Pre-gathering residuals before cutpoint scans</h4>
+<p>The “hot path” of the GFR algorithm is the per-feature split rule evaluations. With feature sort indices pre-computed, this process looks something like</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Assume feature_sort_indices is a nested vector of </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">// p elements, each with n integer indices indicating </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// the rank of each covariate value in ascending order </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">// </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Assume residual is an n-vector of partial residuals </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">// needed for sufficient statistic calculations</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> p<span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="op">(</span>n_k <span class="op">-</span> <span class="dv">1</span><span class="op">);</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> data_idx <span class="op">=</span> feature_sort_indices<span class="op">[</span>j<span class="op">][</span>i<span class="op">];</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> resid <span class="op">=</span> residuals<span class="op">[</span>data_idx<span class="op">];</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... Accumulate sufficient statistics</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... Compute log-likelihoods</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is relatively slow since each loop iteration accesses <code>residual</code> in an arbitrary fashion (i.e.&nbsp;<code>data_idx</code> could be 10 when <code>i = 0</code> and 40000 when <code>i = 1</code>). Modern CPUs have many optimizations for predictable data access patterns (for example if <code>residual</code> were accessed by the loop variable <code>i</code>), so v4 attempts to mitigate the arbitrary access problem with an explicit <a href="https://en.wikipedia.org/wiki/Gather/scatter_(vector_addressing)#Gather">gather</a> step that packs each <code>residuals[data_idx]</code> element into a temporary buffer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="op">(</span>n_k <span class="op">-</span> <span class="dv">1</span><span class="op">);</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> data_idx <span class="op">=</span> feature_sort_indices<span class="op">[</span>j<span class="op">][</span>i<span class="op">];</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  resid_buffer<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> residuals<span class="op">[</span>data_idx<span class="op">];</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="op">(</span>n_k <span class="op">-</span> <span class="dv">1</span><span class="op">);</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> resid <span class="op">=</span> resid_buffer<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ... Accumulate sufficient statistics</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ... Compute log-likelihoods</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ultimately, the second loop’s cache-friendliness and <a href="https://en.wikipedia.org/wiki/Automatic_vectorization">potential for auto-vectorization</a> doesn’t mitigate the data access done in the first loop and this update proves to have no effect on runtime.</p>
+</section>
+<section id="v5-feature-subsampling" class="level4">
+<h4 class="anchored" data-anchor-id="v5-feature-subsampling">v5: Feature subsampling</h4>
+<p>While GFR typically “converges” with fewer samples or iterations than MCMC, this comes at the expense of evaluating <code>p * n_k</code> potential splits recursively for each node <code>k</code> until the tree has stopped splitting. When <code>p</code> is large, the work involved in this enumeration is substantial and some of these features may be “noise” from the perspective of obtaining a good model fit.</p>
+<p>We can reduce the amount of work done by randomly selecting a subset <code>p_subset</code> of features and only evaluating <code>p_subset * n_k</code> potential splits for each node. This raises a natural objection – “what if we omit an important feature?” – which is partially mitigated by the fact that we evaluate a different subset of features at every node of every tree, leaving hundreds / thousands of opportunities to select and evaluate the “correct” features.</p>
+<p>This update also removes some of the inefficient work introduced and discussed in the <a href="#v3-two-stage-cutpoint-sampling">v3</a> section for a “less naive” two-pass design (i.e.&nbsp;splits are not enumerated up front as a vector-of-vectors in stage 1).</p>
+<p>As with the reference implementation of XBART, <code>v5</code> defaults to subsampling <span class="math inline">\(\sqrt{p}\)</span> features, rounded to the nearest integer. With <code>p=50</code> features in the benchmark evaluation, <code>v5</code> reduces runtime from over 7 minutes to just under 5 minutes, with no impact on test-set RMSE.</p>
+</section>
+<section id="v6-node-parallel-sampling" class="level4">
+<h4 class="anchored" data-anchor-id="v6-node-parallel-sampling">v6: Node-parallel sampling</h4>
+<p>So far, all of the computational work discussed above (including all of the BART implementations) have been performed on a single thread. <code>v6</code> is the first earnest attempt at making greater use of a computer’s hardware. Rather than use OpenMP, a <a href="https://github.com/andrewherren/faststochtree/blob/v12-leaf-counts/include/faststochtree/thread_pool.hpp">simple custom threadpool</a> dispatches independent blocks of work to different threads.</p>
+<p>The first approach to multithreading in <code>faststochtree</code> involves parallelizing the work done by independent nodes at the same level of a tree. A simple tree with a single split has two leaf nodes that partition the data into mutually-exclusive regions, so their split candidates can be evaluated by different threads with no data dependency.</p>
+<p>This update has almost no effect on runtime, as the overhead of multi-threading outweighs the gains from processing relatively few nodes in parallel. Consider a shallow tree with two leaf nodes. At <code>n=50000</code>, each node likely contains a lot of data, but node-parallelism means the program deploys two threads to process this data concurrently. In contrast, a comparatively deep tree with 128 leaf nodes provides many independent “blocks of work” to be processed by different threads, but each block of work will be relatively “small” as each node contains few observations.</p>
+</section>
+<section id="v7-feature-parallel-sampling" class="level4">
+<h4 class="anchored" data-anchor-id="v7-feature-parallel-sampling">v7: Feature-parallel sampling</h4>
+<p><code>faststochtree</code>’s second attempt at multithreading processes <strong>features</strong> independently at each node’s cutpoint evaluation. This update reduces runtime substantially, from roughly 5 minutes to 2 minutes, with no effect on test set RMSE.</p>
+</section>
+<section id="v8-persistent-partition-tracker-object" class="level4">
+<h4 class="anchored" data-anchor-id="v8-persistent-partition-tracker-object">v8: Persistent partition tracker object</h4>
+<p>The GFR implementation defines a <code>TreePartition</code> object that maintains a copy of the sort indices for each feature which partitions as a tree grows. For example, suppose feature 0 is sorted by the following indices at root (node 0): <code>[6,8,3,4,1,5,2,0,7]</code>. If node 0 is partitioned, we must “re-arrange” these sort indices so that we know how to place feature 0 in ascending order within nodes 1 and 2. Suppose that converts <code>[6,8,3,4,1,5,2,0,7]</code> into <code>[3,4,1,5,6,8,2,0,7]</code> for feature 0, we must also now maintain “begin” and “end” indices for our new nodes. In this case, node 1 begins at position 0 and ends at position 4, while node 2 begins at position 4 and ends at position 9. Note that we must maintain sifted sort indices (i.e.&nbsp;<code>[3,4,1,5,6,8,2,0,7]</code>) for each feature, but the node <code>[begin, end)</code> tracker is repeated.</p>
+<p><code>v8</code> turns this object from temporary state which is created and destroyed each time a new tree is sampled into a “persistent” object which is reset at each new tree. Ultimately, this update has little effect on runtime.</p>
+</section>
+<section id="v9-histogram-based-split-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="v9-histogram-based-split-evaluation">v9: Histogram-based split evaluation</h4>
+<p>This update takes advantage of the fact that, with quantized features, there are at most 255 possible split points for every feature. Splits are evaluated by a <code>log_marginal_likelihood</code> function that takes two sufficient statistics, 1. the number of observations on the left and right sides of a proposed split, and 2. the sum of partial residuals on the left and right sides of a proposed split.</p>
+<p>The way <code>faststochtree</code> from v2 to v8 computed this was to 1. iterate through a feature’s “sort indices” for a given node, 2. accumulate the two sufficient statistics, 3. compute the log marginal likelihood using the current values of the sufficient statistics whenever a feature value changed.</p>
+<p>This requires maintaining sort indices for each feature, which has an <code>O(n_k * p)</code> update cost after each partition (i.e.&nbsp;to sift the sort indices into their respective node positions for every feature). <code>v9</code> replaces feature-specific sort indices with an unsorted vector of indices that sifts as the tree grows. This vector (which we’ll call <code>flat_obs</code>) is used to populate histograms of the sufficient statistics for every feature, as in the simplified code below</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// j is the current feature being evaluated</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">// begin_k and end_k are positions of node k in the flat_obs index vector</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> begin_k<span class="op">;</span> i <span class="op">&lt;</span> end_k<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Get the raw data index of the observation indexed by i in node k</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> obs_idx <span class="op">=</span> flat_obs<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Get the covariate j bin value of observation obs_idx</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> bin_idx <span class="op">=</span> covariates<span class="op">.</span>at<span class="op">(</span>obs_idx<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add the partial residual for obs_idx and increment the count for each histogram at bin_idx</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  sum_hist<span class="op">[</span>bin_idx<span class="op">]</span> <span class="op">+=</span> residual<span class="op">[</span>obs_idx<span class="op">];</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  count_hist<span class="op">[</span>bin_idx<span class="op">]</span> <span class="op">++;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This histogram construction step is <code>O(n_k * p_subset)</code>. Once each feature’s histogram is constructed, evaluation involves an <code>O(p_subset * 255)</code> scan. After a split is made, a single <code>O(n_k)</code> partition of <code>flat_obs</code> is required, <strong>in contrast to</strong> the <code>O(n_k * p)</code> update of the sort indices in v8.</p>
+<p>And indeed, the impact of this change is sizable, taking runtime from over 2 minutes to 28 seconds with no impact on test set RMSE!</p>
+</section>
+<section id="v10-flat-buffer-for-node-range-trackers" class="level4">
+<h4 class="anchored" data-anchor-id="v10-flat-buffer-for-node-range-trackers">v10: Flat buffer for node range trackers</h4>
+<p>This is a bookkeeping update that switches the underlying datastructure that stores begin and end indices for each node in a tree from a <code>std::unordered_map</code> to a <code>std::vector</code> and it has minimal runtime impact.</p>
+</section>
+<section id="v11-and-v12-platform-dependent-optimizations" class="level4">
+<h4 class="anchored" data-anchor-id="v11-and-v12-platform-dependent-optimizations">v11 and v12: Platform-dependent optimizations</h4>
+<p>v11 uses <code>__builtin_prefetch</code> to attempt to make the histogram construction more cache-friendly. This update has almost no runtime impact, and requires platform-specific handling of the prefetch instruction (<code>__builtin_prefetch</code> is implemented in gcc and clang, but making this work on MSVC x86/x64 would require selectively dispatching <code>__mm_prefetch</code> based on detected platform).</p>
+<p>v12 uses <a href="https://developer.arm.com/Architectures/Neon">NEON</a> SIMD intrinsics<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to more efficiently partition observations after a split, for a slight performance improvement from 29s to 27s.</p>
+</section>
+<section id="v13-reusing-partition-tracker-for-leaf-sampling" class="level4">
+<h4 class="anchored" data-anchor-id="v13-reusing-partition-tracker-for-leaf-sampling">v13: Reusing partition tracker for leaf sampling</h4>
+<p>GFR has two steps: (1) grow a tree stochastically until some stopping criterion is met (i.e.&nbsp;the max depth has been reached or the algorithm has stopped splitting) (2) sample leaf node values for the newly-grown tree.</p>
+<p>Prior to v13, <code>faststochtree</code> determined which observations fell into a given leaf node by re-traversing a tree. v13 uses the <code>flat_obs</code> partition tracker to avoid this costly traversal, for a runtime improvement from 27s to 23s.</p>
+</section>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<section id="bart" class="level3">
+<h3 class="anchored" data-anchor-id="bart">BART</h3>
+<p>The most impactful runtime performance optimizations for BART appear to be</p>
+<ol type="1">
+<li>Quantization of covariates and the use of single-precision for outcome data</li>
+<li>Maintaining a cache of observation to leaf node assignments</li>
+<li>Storing leaf sufficient statistics in a contiguous buffer</li>
+<li>Updating sufficient statistics in a “multi-lane accumulation” pattern</li>
+<li>Maintaining a pre-partitioned buffer of observations in a node</li>
+</ol>
+<p>Many of these techniques are already used in various BART libraries (for example, <code>stochtree</code> does variants of 2, 3, and 5).</p>
+</section>
+<section id="xbart" class="level3">
+<h3 class="anchored" data-anchor-id="xbart">XBART</h3>
+<p>The most impactful runtime performance optimizations for XBART appear to be</p>
+<ol type="1">
+<li>Pre-sorting of covariates<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
+<li>Feature sub-sampling</li>
+<li>Feature-parallel cutpoint enumeration</li>
+<li>Evaluating cutpoints via histogram</li>
+</ol>
+<p>1 and 2 are supported by both <code>stochtree</code> and <code>XBART</code> and 3 is also supported by <code>stochtree</code> (though it is implemented with OpenMP as opposed to a custom thread-pool).</p>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<ol type="1">
+<li>Future blog posts will explore the challenges / difficulties of achieving a substantial speedup on the Apple Silicon GPU for both algorithms</li>
+<li>Development roadmap for <code>faststochtree</code>:</li>
+</ol>
+<ul>
+<li>Support for ordered categorical covariates</li>
+<li>Extending the fast BART implementation to a two forest “fast BCF” interface for causal inference use cases</li>
+</ul>
+<ol start="3" type="1">
+<li>Development roadmap for <code>stochtree</code>:</li>
+</ol>
+<ul>
+<li>BART: given the substantial impact of quantization, single precision and multi-lane sufficient statistic accumulation, it will be interesting to determine whether these techniques can be introduced into <code>stochtree</code> for similar performance gains</li>
+<li>XBART: given the performance impact of histograms for split evaluation, it would be nice to gauge the extent to which this helps <code>stochtree</code></li>
+</ul>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The code checks for the availability of NEON instructions with <code>#ifdef __ARM_NEON</code> and for compatibility with <code>__builtin_prefetch</code> with <code>#ifdef __GNUC__</code>, so it still works on all major platforms<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>It is fair to say that the algorithm is only viable with pre-sorted covariates<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/andrewherren\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Drew Herren</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
