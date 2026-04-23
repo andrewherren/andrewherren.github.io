@@ -20,8 +20,8 @@ The underlying implementation is largely in C++ with tree classes and I/O routin
 
 On a benchmark dataset with 50k observations and 50 features, 
 
-* `stochtree` takes 3 minutes to run 1200 iterations of the BART sampler, while `faststochtree` does the same in 28 seconds,
-* `stochtree` takes 80 seconds to run 1200 iterations of the XBART sampler, while `faststochtree` does the same in 23 seconds.
+* `stochtree` takes 3 minutes to run 1200 iterations of the BART sampler, while `faststochtree` does the same in 36 seconds,
+* `stochtree` takes 80 seconds to run 40 iterations of the XBART sampler, while `faststochtree` does the same in 23 seconds.
 
 ---
 
