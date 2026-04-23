@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-04-21">
+<meta name="dcterms.date" content="2026-04-23">
 
 <title>How fast can we make BART on a laptop? – Drew Herren</title>
 <style>
@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-92ccca19d14c0bd04edafc1952284584.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -244,7 +244,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 21, 2026</p>
+      <p class="date">April 23, 2026</p>
     </div>
   </div>
   
@@ -309,8 +309,8 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td>faststochtree (v13)</td>
-<td>25</td>
-<td>1.01</td>
+<td>36</td>
+<td>1.00</td>
 </tr>
 <tr class="even">
 <td>dbarts</td>
@@ -353,24 +353,24 @@ window.Quarto = {
 <section id="v2-storing-data-as-single-precision-float" class="level4">
 <h4 class="anchored" data-anchor-id="v2-storing-data-as-single-precision-float">v2: Storing data as single-precision <code>float</code></h4>
 <p>Computers store data in bits – 0s and 1s whose arrangement can store large integer or floating-point numbers. Floating point numbers stored as <code>double</code> occupy 64 bits while a <code>float</code> requires only 32 bits.</p>
-<p>For algorithms that process a large amount of floating point data, the size of each individual datum and the speed with which data can be loaded into the processor is often influential. And indeed, when we change nothing about our naive BART implementation except to replace <code>double</code> with <code>float</code> throughout the codebase, we see a roughly 1.4x improvement in the sampler’s runtime on a benchmark program, with a minimal impact on test-set RMSE.</p>
+<p>For algorithms that process a large amount of floating point data, the size of each individual datum and the speed with which data can be loaded into the processor is often influential. And indeed, when we change nothing about our naive BART implementation except to replace <code>double</code> with <code>float</code> throughout the codebase, we see a roughly 1.5x improvement in the sampler’s runtime on a benchmark program, with a minimal impact on test-set RMSE.</p>
 </section>
 <section id="v3-quantizing-covariates" class="level4">
 <h4 class="anchored" data-anchor-id="v3-quantizing-covariates">v3: Quantizing covariates</h4>
 <p>Rather than store numeric covariates in their original floating-point scale, we can compute a predetermined number of quantiles for each covariate and store covariates in integer-valued “bins” defined by the quantile range of an observation’s raw floating point value. This transformation converted covariates from <code>float</code> to <code>uint8_t</code>, further simplifying their storage and processing.</p>
-<p>v3 yields a ~1.8x runtime improvement over v1 on the same benchmark, with a similar small impact on RMSE.</p>
+<p>v3 yields a ~1.9x runtime improvement over v1 on the same benchmark, with a similar small impact on RMSE.</p>
 <p>We note that several popular BART libraries use this technique (though not <code>stochtree</code> at the moment).</p>
 </section>
 <section id="v4-column-major-storage" class="level4">
 <h4 class="anchored" data-anchor-id="v4-column-major-storage">v4: Column-major storage</h4>
 <p>Row-major storage turns a matrix into a flat array row-by-row, so that the <code>(i, j)</code> element of the matrix is accessed from the <code>i * num_cols + j</code> element of the flat array. Column major storage inverts this, so that the <code>(i,j)</code> element of a matrix is accessed via the <code>j * num_rows + i</code> element of the flat array.</p>
-<p>When we switch from row-major to column-major storage for the covariates, we obtain essentially no improvement over v3. (Though column-major storage matters much more for the XBART algorithm, which we’ll discuss later.)</p>
+<p>When we switch from row-major to column-major storage for the covariates, we see no improvement over v3. (Though column-major storage matters much more for the XBART algorithm, which we’ll discuss later.)</p>
 </section>
 <section id="v5-fixed-depth-trees" class="level4">
 <h4 class="anchored" data-anchor-id="v5-fixed-depth-trees">v5: Fixed-depth trees</h4>
 <p>One of the key design decisions of <code>bartz</code> was to use trees of a fixed maximum depth. This is in part because the storage requirements of the model become predictable and can be pre-allocated and in part because it enables a “branchless” version of the tree traversal algorithm (see the next section).</p>
 <p>Fixing the depth of a tree at <span class="math inline">\(k\)</span> allows us to store the decision tree differently. With a maximum of <span class="math inline">\(2^{k+1} - 1\)</span> nodes, we can pre-allocate several parallel arrays that store the information for these nodes. Each node indexed by <code>idx</code> is stored such that its left node is stored at <code>2*idx+1</code> and its right node is stored at <code>2*idx+2</code>. <code>faststochtree</code> defaults to a max depth of <code>k=6</code>, as with <code>bartz</code>.</p>
-<p>We find that fixing the depth of the trees and the associated storage changes on their own provide almost no performance improvement over v3 and v4 on an apple silicon CPU, but do lead to a minor-but-noticeable worsening of test-set RMSE.</p>
+<p>We find that fixing the depth of the trees and the associated storage changes on their own increase runtime slightly over v3 and v4 on an apple silicon CPU.</p>
 </section>
 <section id="v6-branchless-traversal" class="level4">
 <h4 class="anchored" data-anchor-id="v6-branchless-traversal">v6: Branchless traversal</h4>
@@ -383,7 +383,7 @@ while node is not leaf:
         node = node.left
     else:
         node = node.right</code></pre>
-<p>Branched computation like this requires a processor to selectively execute one instruction or another based on the output of a previous instruction. This can be a problem for CPUs, which <a href="https://en.wikipedia.org/wiki/Branch_predictor">attempt to predict which branch will execute</a> and pre-load its instructions, and even more so for GPUs, where <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#thread-blocks-and-grids">thread groups (or warps in CUDA parlance) load and execute the same instructions on multiple threads</a>.</p>
+<p>Branched computation like this requires a processor to selectively execute one instruction or another based on the output of a previous instruction. This can be a problem for CPUs, which <a href="https://en.wikipedia.org/wiki/Branch_predictor">attempt to predict which branch will execute</a> and pre-load its instructions, and even more so for GPUs, where <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#thread-blocks-and-grids">warps (in CUDA parlance) or simdgroups / wavefronts load and execute the same instructions on multiple threads</a>.</p>
 <p>With fixed-depth trees, the while loop above can be converted to a for loop (where <code>split_variables</code> and <code>split_thresholds</code> are now two parallel arrays) (see <a href="https://arxiv.org/abs/2410.23244">Petrillo (2025)</a> for more detail)</p>
 <pre class="pseudocode"><code>node_idx = 0
 is_leaf = False
@@ -403,7 +403,7 @@ for depth in 0 to max_depth - 1:
 </section>
 <section id="v8-scatter-buffer" class="level4">
 <h4 class="anchored" data-anchor-id="v8-scatter-buffer">v8: Scatter buffer</h4>
-<p>The original “unoptimized” implementation of BART updated leaf nodes after each tree step by placing the sufficient statistics of each leaf into a <code>std::unordered_map</code> (a lookup table) and accumulating sufficient statistics into the relevant portion of the table. Replacing this lookup table with two parallel vectors with elements for each leaf node cuts runtime from v7 almost in half, for an overall 8.2x speedup over the “naive” implementation.</p>
+<p>The original “unoptimized” implementation of BART updated leaf nodes after each tree step by placing the sufficient statistics of each leaf into a <code>std::unordered_map</code> (a lookup table) and accumulating sufficient statistics into the relevant portion of the table. Replacing this lookup table with two parallel vectors with elements for each leaf node cuts runtime from v7 by 30s, for an overall 5.4x speedup over the “naive” implementation.</p>
 <p>As with v3 and v7, this technique is already implemented in many BART libraries.</p>
 </section>
 <section id="v9-multilane-accumulation" class="level4">
@@ -447,7 +447,7 @@ for depth in 0 to max_depth - 1:
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> post_var  <span class="op">=</span> <span class="op">(</span>tau <span class="op">*</span> sigma2<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>cnt <span class="op">*</span> tau <span class="op">+</span> sigma2<span class="op">);</span></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    tree<span class="op">.</span>leaf_value<span class="op">[</span>k<span class="op">]</span> <span class="op">=</span> post_mean <span class="op">+</span> <span class="bu">std::</span>sqrt<span class="op">(</span>post_var<span class="op">)</span> <span class="op">*</span> rng<span class="op">.</span>normal<span class="op">();</span></span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This update provides another major computational step change in the BART performance scaffold, bringing total runtime down to 33 seconds for a 15x improvement over the naive implementation.</p>
+<p>This update provides another major computational step change in the BART performance scaffold, bringing total runtime down to 56 seconds for an 8x improvement over the naive implementation.</p>
 </section>
 <section id="v10-fused-scatter-gather" class="level4">
 <h4 class="anchored" data-anchor-id="v10-fused-scatter-gather">v10: Fused scatter-gather</h4>
@@ -463,7 +463,7 @@ for depth in 0 to max_depth - 1:
 <li>Accumulate sufficient statistics for model updates by reading the full residual for each observation and adding the stored <span class="math inline">\(g_j(X_i)\)</span></li>
 <li><em>[After updating the tree and its leaf values]</em> Store recomputed <span class="math inline">\(g_j(X_i)\)</span> for every <span class="math inline">\(i\)</span> and subtract the change in predicted value from the full residual</li>
 </ol>
-<p>This update does not offer any runtime improvement over v9, perhaps because the compiler is able to easily auto-vectorize the “extra” <span class="math inline">\(O(n)\)</span> residual passes in v9 or perhaps because each sufficient statistic update must access two vectors (the full residual and the prediction cache) which partially offsets the work reduction.</p>
+<p>This update presents a slight runtime regression over v9, for reasons that I don’t fully understand at the moment. Perhaps the compiler is able to easily auto-vectorize the “extra” <span class="math inline">\(O(n)\)</span> residual passes in v9 and saving these two passes is more than offset by the complicated memory access patterns in v10 (as the sufficient statistic updates read from the full residual and the prediction cache)? I intend to look into this further in the future and perhaps scaffold v13 directly on top of v9.</p>
 </section>
 <section id="v11-scratch-workspace-pre-allocation" class="level4">
 <h4 class="anchored" data-anchor-id="v11-scratch-workspace-pre-allocation">v11: Scratch workspace pre-allocation</h4>
@@ -478,7 +478,7 @@ for depth in 0 to max_depth - 1:
 <h4 class="anchored" data-anchor-id="v13-sifted-leaf-node-observation-buffer">v13: Sifted leaf node observation buffer</h4>
 <p>Every tree update requires a node-specific proposal (grow or prune) which means assembling the data that fall into a given node. Through v12 this was done by iterating through every observation and checking which observations fall into node <code>j</code>. We can alternatively maintain a buffer of observation indices, initially arranged in ascending order from 0 to <code>n-1</code>, which is partitioned each time a node is split so that the observations for node <code>j</code> can be determined by offsets into this buffer.</p>
 <p>Concretely, if we started with an observation buffer <code>[0,1,2,3,4,5,6]</code> and partitioned the root node so that observations 0, 3, and 4 are in the left node and 1, 2, 5, and 6 are in the right node, the buffer would sift into <code>[0,3,4,1,2,5,6]</code>, with “start index” offsets of <code>[0,0,3]</code> and “end index” offsets of <code>[7, 3, 7]</code> for nodes 0, 1 and 2.</p>
-<p>This update improves benchmark runtime from 36 seconds to 25 seconds. We note that several BART packages, including <code>stochtree</code>, include a variant of this technique.</p>
+<p>This update improves benchmark runtime from 63 seconds to 36 seconds. We note that several BART packages, including <code>stochtree</code>, include a variant of this technique.</p>
 </section>
 </section>
 </section>
@@ -497,7 +497,7 @@ for depth in 0 to max_depth - 1:
 <section id="comparison-to-existing-software-1" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-to-existing-software-1">Comparison to existing software</h3>
 <p>We can compare the runtimes above to two XBART R packages: <a href="https://github.com/JingyuHe/XBART">XBART</a> and <a href="https://stochtree.ai/">stochtree</a>. As with BART, comparisons between R packages and a C++ CLI are not completely apples-to-apples, but we make every effort to run the same number of samples of the same number of trees for the same data-generating process with the same dimensions.</p>
-<p>We can see in the table below that both of the R packages attain a slightly lower test-set RMSE, with <code>XBART</code> as the faster implementation.</p>
+<p>We can see in the table below that both of the R packages attain a slightly lower test-set RMSE, with <code>XBART</code> as the faster implementation<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -635,7 +635,7 @@ for depth in 0 to max_depth - 1:
 <section id="v11-and-v12-platform-dependent-optimizations" class="level4">
 <h4 class="anchored" data-anchor-id="v11-and-v12-platform-dependent-optimizations">v11 and v12: Platform-dependent optimizations</h4>
 <p>v11 uses <code>__builtin_prefetch</code> to attempt to make the histogram construction more cache-friendly. This update has almost no runtime impact, and requires platform-specific handling of the prefetch instruction (<code>__builtin_prefetch</code> is implemented in gcc and clang, but making this work on MSVC x86/x64 would require selectively dispatching <code>__mm_prefetch</code> based on detected platform).</p>
-<p>v12 uses <a href="https://developer.arm.com/Architectures/Neon">NEON</a> SIMD intrinsics<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to more efficiently partition observations after a split, for a slight performance improvement from 29s to 27s.</p>
+<p>v12 uses <a href="https://developer.arm.com/Architectures/Neon">NEON</a> SIMD intrinsics<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> to more efficiently partition observations after a split, for a slight performance improvement from 29s to 27s.</p>
 </section>
 <section id="v13-reusing-partition-tracker-for-leaf-sampling" class="level4">
 <h4 class="anchored" data-anchor-id="v13-reusing-partition-tracker-for-leaf-sampling">v13: Reusing partition tracker for leaf sampling</h4>
@@ -662,7 +662,7 @@ for depth in 0 to max_depth - 1:
 <h3 class="anchored" data-anchor-id="xbart">XBART</h3>
 <p>The most impactful runtime performance optimizations for XBART appear to be</p>
 <ol type="1">
-<li>Pre-sorting of covariates<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
+<li>Pre-sorting of covariates<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
 <li>Feature sub-sampling</li>
 <li>Feature-parallel cutpoint enumeration</li>
 <li>Evaluating cutpoints via histogram</li>
@@ -695,8 +695,9 @@ for depth in 0 to max_depth - 1:
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>The code checks for the availability of NEON instructions with <code>#ifdef __ARM_NEON</code> and for compatibility with <code>__builtin_prefetch</code> with <code>#ifdef __GNUC__</code>, so it still works on all major platforms<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>It is fair to say that the algorithm is only viable with pre-sorted covariates<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Note that there is substantial variation in the faststochtree test set RMSE within each of the 10 iterations of the benchmark suite I ran, so I intend to rerun this experiment for more iterations to see if the test set RMSE averages out closer to its competitors’ performance<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The code checks for the availability of NEON instructions with <code>#ifdef __ARM_NEON</code> and for compatibility with <code>__builtin_prefetch</code> with <code>#ifdef __GNUC__</code>, so it still works on all major platforms<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>It is fair to say that the algorithm is only viable with pre-sorted covariates<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

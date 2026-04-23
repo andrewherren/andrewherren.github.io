@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://andrewherren.github.io/publications.html</loc>
-    <lastmod>2026-04-22T03:32:44.534Z</lastmod>
+    <loc>https://andrewherren.github.io/teaching.html</loc>
+    <lastmod>2026-04-23T16:17:18.512Z</lastmod>
   </url>
   <url>
     <loc>https://andrewherren.github.io/index.html</loc>
-    <lastmod>2026-04-22T03:32:44.532Z</lastmod>
-  </url>
-  <url>
-    <loc>https://andrewherren.github.io/posts/2026-04-21-bart-laptop/index.html</loc>
-    <lastmod>2026-04-22T03:32:44.534Z</lastmod>
-  </url>
-  <url>
-    <loc>https://andrewherren.github.io/cv.html</loc>
-    <lastmod>2026-04-22T03:32:44.519Z</lastmod>
-  </url>
-  <url>
-    <loc>https://andrewherren.github.io/posts.html</loc>
-    <lastmod>2026-04-22T03:32:44.532Z</lastmod>
-  </url>
-  <url>
-    <loc>https://andrewherren.github.io/software.html</loc>
-    <lastmod>2026-04-22T03:32:44.535Z</lastmod>
-  </url>
-  <url>
-    <loc>https://andrewherren.github.io/teaching.html</loc>
-    <lastmod>2026-04-22T03:32:44.535Z</lastmod>
-  </url>
-  <url>
-    <loc>https://andrewherren.github.io/posts/2022-12-28-scikit-tree.html</loc>
-    <lastmod>2026-04-22T03:32:44.533Z</lastmod>
+    <lastmod>2026-04-23T16:17:18.509Z</lastmod>
   </url>
   <url>
     <loc>https://andrewherren.github.io/talks.html</loc>
-    <lastmod>2026-04-22T03:32:44.535Z</lastmod>
+    <lastmod>2026-04-23T16:17:18.512Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andrewherren.github.io/posts/2022-12-28-scikit-tree.html</loc>
+    <lastmod>2026-04-23T16:17:18.509Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andrewherren.github.io/software.html</loc>
+    <lastmod>2026-04-23T16:17:18.512Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andrewherren.github.io/cv.html</loc>
+    <lastmod>2026-04-23T16:17:18.493Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andrewherren.github.io/posts/2026-04-23-bart-laptop/index.html</loc>
+    <lastmod>2026-04-23T16:17:18.510Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andrewherren.github.io/publications.html</loc>
+    <lastmod>2026-04-23T16:17:18.512Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andrewherren.github.io/posts.html</loc>
+    <lastmod>2026-04-23T16:17:18.509Z</lastmod>
   </url>
 </urlset>
