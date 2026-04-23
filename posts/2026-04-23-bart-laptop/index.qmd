@@ -4,7 +4,7 @@ date: 2026-04-23
 categories: [BART, XBART, C++, CPU, GPU, stochtree]
 ---
 
-In which I use Claude Code to build a streamlined version of BART that runs 20x faster than the naive implementation on an M1 Macbook Pro.
+In which I use Claude Code to build a streamlined version of BART that runs 13x faster than the naive implementation on an M1 Macbook Pro.
 
 ## Why?
 
@@ -48,11 +48,11 @@ Armed with a fast working implementation of BART, I wanted to decompose it into 
 
 We'll talk about the results first, rather than make you read through several pages of C++ minutiae. All benchmarks are run on an Apple M1 Max laptop with 10 cores and 64 GB RAM.
 
-We take BART from a "naive" working implementation that runs 1200 iterations (200 burnin + 1000 samples) of 200 trees on n = 50k, p = 50 in ~8 minutes to a fine-tuned version that runs 20x faster in 25 seconds.
+We take BART from a "naive" working implementation that runs 1200 iterations (200 burnin + 1000 samples) of 200 trees on n = 50k, p = 50 in ~8 minutes to a fine-tuned version that runs 13x faster in 36 seconds.
 
 ![](speedup_bart.png)
 
-We see a minimal impact on the test set RMSE of the benchmark we ran (the true error standard deviation is 1), but it is noteworthy that some of the software improvements appear to "coarsen" the model fit slightly in a way that degrades performance. For many use cases, getting to an RMSE of 1.03 in 25 seconds is far better than an RMSE of 0.99 in 8 minutes, but it is worth noting that these runtime gains aren't a one-off Pareto improvement.
+And we see essentially no impact on the test set RMSE for the benchmark we ran (the true error standard deviation is 1).
 
 ![](rmse_bart.png)
 
@@ -256,11 +256,11 @@ Given the importance of XBART in my own work and to many of `stochtree`'s users,
 
 As with BART, we'll talk about the results first, and all benchmarks are run on an Apple M1 Max laptop with 10 cores and 64 GB RAM.
 
-We take XBART from a "naive" working implementation that takes over 40 minutes to sample 40 iterations (15 burnin + 25 retained) of 200 trees on n = 50k, p = 50 to a fine-tuned version that runs 119x faster in 23 seconds.
+We take XBART from a "naive" working implementation that takes over 40 minutes to sample 40 iterations (15 burnin + 25 retained) of 200 trees on n = 50k, p = 50 to a fine-tuned version that runs 113x faster in 23 seconds.
 
 ![](speedup_gfr.png)
 
-We see a minimal impact on the test set RMSE of the benchmark we ran (the true error standard deviation is 1 as with the MCMC example). Note that `v1` is omitted from the RMSE comparison. With a runtime of >40 mins, it was both unnecessary and prohibitive to run 30 iterations of the benchmark suite as with every other implementation. This makes its benchmark RMSE apples-and-oranges with the other versions. In terms of model fit, `v2` is materially the same implementation, just avoiding an obvious performance limitation.
+We appear to see a minimal impact on the test set RMSE of the benchmark we ran, but there is substantial variation in the test RMSE of the 10 iterations we ran, so I intend to rerun the benchmark suite for more iterations. Note that `v1` is omitted from the RMSE comparison. With a runtime of >40 mins, it was both unnecessary and prohibitive to run 10 iterations of the benchmark suite as with every other implementation. This makes its benchmark RMSE apples-and-oranges with the other versions. In terms of model fit, `v2` is materially the same implementation, just avoiding an obvious performance limitation.
 
 ![](rmse_gfr.png)
 
