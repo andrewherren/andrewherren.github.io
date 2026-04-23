@@ -256,7 +256,7 @@ window.Quarto = {
 </header>
 
 
-<p>In which I use Claude Code to build a streamlined version of BART that runs 20x faster than the naive implementation on an M1 Macbook Pro.</p>
+<p>In which I use Claude Code to build a streamlined version of BART that runs 13x faster than the naive implementation on an M1 Macbook Pro.</p>
 <section id="why" class="level2">
 <h2 class="anchored" data-anchor-id="why">Why?</h2>
 <p>Tree ensembles have played a big role in my career, both in my PhD research and my postdoc work. I built <a href="https://stochtree.ai/">stochtree</a> with my collaborators to make it easier and faster to fit <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-1/BART-Bayesian-additive-regression-trees/10.1214/09-AOAS285.full">BART</a>-based models in R and Python.</p>
@@ -289,9 +289,9 @@ window.Quarto = {
 <section id="results" class="level3">
 <h3 class="anchored" data-anchor-id="results">Results</h3>
 <p>We’ll talk about the results first, rather than make you read through several pages of C++ minutiae. All benchmarks are run on an Apple M1 Max laptop with 10 cores and 64 GB RAM.</p>
-<p>We take BART from a “naive” working implementation that runs 1200 iterations (200 burnin + 1000 samples) of 200 trees on n = 50k, p = 50 in ~8 minutes to a fine-tuned version that runs 20x faster in 25 seconds.</p>
+<p>We take BART from a “naive” working implementation that runs 1200 iterations (200 burnin + 1000 samples) of 200 trees on n = 50k, p = 50 in ~8 minutes to a fine-tuned version that runs 13x faster in 36 seconds.</p>
 <p><img src="speedup_bart.png" class="img-fluid"></p>
-<p>We see a minimal impact on the test set RMSE of the benchmark we ran (the true error standard deviation is 1), but it is noteworthy that some of the software improvements appear to “coarsen” the model fit slightly in a way that degrades performance. For many use cases, getting to an RMSE of 1.03 in 25 seconds is far better than an RMSE of 0.99 in 8 minutes, but it is worth noting that these runtime gains aren’t a one-off Pareto improvement.</p>
+<p>And we see essentially no impact on the test set RMSE for the benchmark we ran (the true error standard deviation is 1).</p>
 <p><img src="rmse_bart.png" class="img-fluid"></p>
 </section>
 <section id="comparison-to-existing-software" class="level3">
@@ -489,9 +489,9 @@ for depth in 0 to max_depth - 1:
 <section id="results-1" class="level3">
 <h3 class="anchored" data-anchor-id="results-1">Results</h3>
 <p>As with BART, we’ll talk about the results first, and all benchmarks are run on an Apple M1 Max laptop with 10 cores and 64 GB RAM.</p>
-<p>We take XBART from a “naive” working implementation that takes over 40 minutes to sample 40 iterations (15 burnin + 25 retained) of 200 trees on n = 50k, p = 50 to a fine-tuned version that runs 119x faster in 23 seconds.</p>
+<p>We take XBART from a “naive” working implementation that takes over 40 minutes to sample 40 iterations (15 burnin + 25 retained) of 200 trees on n = 50k, p = 50 to a fine-tuned version that runs 113x faster in 23 seconds.</p>
 <p><img src="speedup_gfr.png" class="img-fluid"></p>
-<p>We see a minimal impact on the test set RMSE of the benchmark we ran (the true error standard deviation is 1 as with the MCMC example). Note that <code>v1</code> is omitted from the RMSE comparison. With a runtime of &gt;40 mins, it was both unnecessary and prohibitive to run 30 iterations of the benchmark suite as with every other implementation. This makes its benchmark RMSE apples-and-oranges with the other versions. In terms of model fit, <code>v2</code> is materially the same implementation, just avoiding an obvious performance limitation.</p>
+<p>We appear to see a minimal impact on the test set RMSE of the benchmark we ran, but there is substantial variation in the test RMSE of the 10 iterations we ran, so I intend to rerun the benchmark suite for more iterations. Note that <code>v1</code> is omitted from the RMSE comparison. With a runtime of &gt;40 mins, it was both unnecessary and prohibitive to run 10 iterations of the benchmark suite as with every other implementation. This makes its benchmark RMSE apples-and-oranges with the other versions. In terms of model fit, <code>v2</code> is materially the same implementation, just avoiding an obvious performance limitation.</p>
 <p><img src="rmse_gfr.png" class="img-fluid"></p>
 </section>
 <section id="comparison-to-existing-software-1" class="level3">
