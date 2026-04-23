@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-92ccca19d14c0bd04edafc1952284584.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -175,8 +175,8 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://github.com/andrewherren/faststochtree">faststochtree</a> is a performance-optimized implementation of stochtree’s core models, fine-tuned for fast sampling on Apple Silicon machines. It is mostly optimized for efficient CPU execution, but it was inspired by Giacomo Petrillo’s <a href="https://github.com/bartz-org/bartz">bartz</a> project which implements a GPU-accelerated version of BART using <a href="https://github.com/jax-ml/jax">jax</a>.</p>
 <p>On a benchmark dataset with 50k observations and 50 features,</p>
 <ul>
-<li><code>stochtree</code> takes 3 minutes to run 1200 iterations of the BART sampler, while <code>faststochtree</code> does the same in 28 seconds,</li>
-<li><code>stochtree</code> takes 80 seconds to run 1200 iterations of the XBART sampler, while <code>faststochtree</code> does the same in 23 seconds.</li>
+<li><code>stochtree</code> takes 3 minutes to run 1200 iterations of the BART sampler, while <code>faststochtree</code> does the same in 36 seconds,</li>
+<li><code>stochtree</code> takes 80 seconds to run 40 iterations of the XBART sampler, while <code>faststochtree</code> does the same in 23 seconds.</li>
 </ul>
 <hr>
 </section>

@@ -1,10 +1,52 @@
 [
   {
-    "objectID": "teaching.html",
-    "href": "teaching.html",
-    "title": "Teaching",
+    "objectID": "publications.html",
+    "href": "publications.html",
+    "title": "Research",
     "section": "",
-    "text": "I have taught recitation sections for the following courses at Arizona State University:\n\nMAT 270 (Calculus with Analytic Geometry I), Fall 2020\nMAT 271 (Calculus with Analytic Geometry II), Fall 2021\nMAT 271 (Calculus with Analytic Geometry II), Spring 2022"
+    "text": "Herren, A., Hahn, P.R., Murray, J. & Carvalho, C (2025)\narXiv | Paper\nstochtree is a C++ library for Bayesian tree ensemble models such as BART and Bayesian Causal Forests (BCF), as well as user-specified variations. Unlike previous BART packages, stochtree provides bindings to both R and Python for full interoperability. stochtree boasts a more comprehensive range of models relative to previous packages, including heteroskedastic forests, random effects, and treed linear models. Additionally, stochtree offers flexible handling of model fits: the ability to save model fits, reinitialize models from existing fits (facilitating improved model initialization heuristics), and pass fits between R and Python. On both platforms, stochtree exposes lower-level functionality, allowing users to specify models incorporating Bayesian tree ensembles without needing to modify C++ code. We illustrate the use of stochtree in three settings: i) straightfoward applications of existing models such as BART and BCF, ii) models that include more sophisticated components like heteroskedasticity and leaf-wise regression models, and iii) as a component of custom MCMC routines to fit nonstandard tree ensemble models."
+  },
+  {
+    "objectID": "publications.html#stochtree-bart-based-modeling-in-r-and-python",
+    "href": "publications.html#stochtree-bart-based-modeling-in-r-and-python",
+    "title": "Research",
+    "section": "",
+    "text": "Herren, A., Hahn, P.R., Murray, J. & Carvalho, C (2025)\narXiv | Paper\nstochtree is a C++ library for Bayesian tree ensemble models such as BART and Bayesian Causal Forests (BCF), as well as user-specified variations. Unlike previous BART packages, stochtree provides bindings to both R and Python for full interoperability. stochtree boasts a more comprehensive range of models relative to previous packages, including heteroskedastic forests, random effects, and treed linear models. Additionally, stochtree offers flexible handling of model fits: the ability to save model fits, reinitialize models from existing fits (facilitating improved model initialization heuristics), and pass fits between R and Python. On both platforms, stochtree exposes lower-level functionality, allowing users to specify models incorporating Bayesian tree ensembles without needing to modify C++ code. We illustrate the use of stochtree in three settings: i) straightfoward applications of existing models such as BART and BCF, ii) models that include more sophisticated components like heteroskedasticity and leaf-wise regression models, and iii) as a component of custom MCMC routines to fit nonstandard tree ensemble models."
+  },
+  {
+    "objectID": "publications.html#deep-learning-for-causal-inference-a-comparison-of-architectures-for-heterogeneous-treatment-effect-estimation",
+    "href": "publications.html#deep-learning-for-causal-inference-a-comparison-of-architectures-for-heterogeneous-treatment-effect-estimation",
+    "title": "Research",
+    "section": "Deep Learning for Causal Inference: A Comparison of Architectures for Heterogeneous Treatment Effect Estimation",
+    "text": "Deep Learning for Causal Inference: A Comparison of Architectures for Heterogeneous Treatment Effect Estimation\nPapakostas, D., Herren, A., Hahn, P.R. & Castillo, K (2024)\narXiv | Paper\nThis work began as an in-depth comparison of neural network architectures for causal inference for a PhD course taken by three of its authors. Credit for polishing it and adding an in-depth study of a sleep dataset owes to Demetri Papakostas. This work ultimately convinced me of the importance of decision trees for tabular datasets (which underpin many causal inference problems) and motivated my work on BART / BCF."
+  },
+  {
+    "objectID": "publications.html#on-true-versus-estimated-propensity-scores-for-treatment-effect-estimation-with-discrete-controls",
+    "href": "publications.html#on-true-versus-estimated-propensity-scores-for-treatment-effect-estimation-with-discrete-controls",
+    "title": "Research",
+    "section": "On true versus estimated propensity scores for treatment effect estimation with discrete controls",
+    "text": "On true versus estimated propensity scores for treatment effect estimation with discrete controls\nHerren, A. & Hahn, P. R.(2023)\narXiv | Paper\nThe finite sample variance of an inverse propensity weighted estimator is derived in the case of discrete control variables with finite support. The obtained expressions generally corroborate widely-cited asymptotic theory showing that estimated propensity scores are superior to true propensity scores in the context of inverse propensity weighting. However, similar analysis of a modified estimator demonstrates that foreknowledge of the true propensity function can confer a statistical advantage when estimating average treatment effects."
+  },
+  {
+    "objectID": "publications.html#feature-selection-in-stratification-estimators-of-causal-effects",
+    "href": "publications.html#feature-selection-in-stratification-estimators-of-causal-effects",
+    "title": "Research",
+    "section": "Feature selection in stratification estimators of causal effects",
+    "text": "Feature selection in stratification estimators of causal effects\nHahn, P. R. & Herren, A. (2022)\narXiv | Paper\nWhat role (if any) can modern, machine-learning-based feature selection techniques play in average treatment effect (ATE) estimation in causal inference? This work addresses the question under several assumptions:\n\nDiscrete covariates\nNo post-treatment covariates\nNo unmeasured confounding\n\nIn this case, a stratification estimator that estimates and re-aggregates the treatment-control contrasts \\(\\bar{Y}_{Z=1,X=x} - \\bar{Y}_{Z=0,X=x}\\) for each unique x in the covariate space will identify the ATE.\nThe paper fuses three frameworks for doing causal inference (Causal DAGs, Potential Outcomes, and Structural Equations) and uses important concepts from each framework. We establish some theory on minimality and optimality of adjustment sets and then illustrate the problems and pitfalls of feature selection in a series of examples."
+  },
+  {
+    "objectID": "publications.html#statistical-aspects-of-shap-functional-anova-for-model-interpretation",
+    "href": "publications.html#statistical-aspects-of-shap-functional-anova-for-model-interpretation",
+    "title": "Research",
+    "section": "Statistical Aspects of SHAP: Functional ANOVA for Model Interpretation",
+    "text": "Statistical Aspects of SHAP: Functional ANOVA for Model Interpretation\nHerren, A. & Hahn, P. R. (2022)\narXiv | Paper | Code\nSHAP (Lundberg and Lee 2017) is a popular tool for assessing feature importance in machine learning models. This paper looks at some of the statistical challenges that present themselves in estimating SHAP scores:\n\nHow many synthetic samples to generate and pass through the model’s prediction function (and by what sampling scheme)\nHow to choose a reference distribution for the averaging taking place in each of the synthetic samples\n\nIn investigating these questions, the paper discusses several connections with the sensitivity analysis and design of experiments literature, in particular:\n\nFunctional ANOVA and the notion of effective dimensionality (Kucherenko et al 2009)\nFractional factorial designs and the hypothesis of factor sparsity (Box and Meyer 1986)"
+  },
+  {
+    "objectID": "publications.html#semi-supervised-learning-and-the-question-of-true-versus-estimated-propensity-scores",
+    "href": "publications.html#semi-supervised-learning-and-the-question-of-true-versus-estimated-propensity-scores",
+    "title": "Research",
+    "section": "Semi-supervised learning and the question of true versus estimated propensity scores",
+    "text": "Semi-supervised learning and the question of true versus estimated propensity scores\nHerren, A. & Hahn, P. R. (2020)\narXiv | Paper | Code\nSuppose we have data:\n\n\\(Y\\): an outcome of interest\n\\(Z\\): a treatment that may (or may not) causally impact the outcome\n\\(X\\): a set of control variables that may be related to \\(Z\\), \\(Y\\), or both\n\nand suppose we’re willing to make all of the assumptions that would allow us to identify and estimate a causal effect of \\(Z\\) on \\(Y\\) after adjusting for \\(X\\).\nIf we were given a large amount of data from the same distribution, but without \\(Y\\) observed (“unlabeled data”), can we use that data in our estimate of the causal effect?\nThe answer, it turns out, is “yes!” but the explanation is somewhat more subtle than “more data is always better.” This paper explores the challenges and opportunities that come with doing causal inference on “unlabeled data.”"
   },
   {
     "objectID": "index.html",
@@ -12,27 +54,6 @@
     "title": "About me",
     "section": "",
     "text": "I am a Postdoctoral Fellow at the University of Texas at Austin, working with Jared Murray. Prior to joining UT, I received my PhD in Statistics at Arizona State University, under Richard Hahn’s supervision. My research interests center around machine learning for causal inference.\nI built and continue to maintain stochtree which provides flexible stochastic decision tree ensembles for supervised learning and causal inference in R and Python APIs. I am very interested in high-performance computing and hardware acceleration, particularly techniques that can speed up tree-based algorithms."
-  },
-  {
-    "objectID": "talks.html",
-    "href": "talks.html",
-    "title": "Talks",
-    "section": "",
-    "text": "November 10, 2023 | University of Texas at Austin, Austin, Texas\nPresented as part of the Fall 2023 UT SDS Seminar Series."
-  },
-  {
-    "objectID": "talks.html#statistical-aspect-of-shap-functional-anova-for-model-interpretation",
-    "href": "talks.html#statistical-aspect-of-shap-functional-anova-for-model-interpretation",
-    "title": "Talks",
-    "section": "",
-    "text": "November 10, 2023 | University of Texas at Austin, Austin, Texas\nPresented as part of the Fall 2023 UT SDS Seminar Series."
-  },
-  {
-    "objectID": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
-    "href": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
-    "title": "Talks",
-    "section": "Feature selection for learning causal effects: a finite-sample, stratification estimator perspective",
-    "text": "Feature selection for learning causal effects: a finite-sample, stratification estimator perspective\nAugust 12, 2022 | Washington University in St. Louis, St. Louis, Missouri\nPresented at the 2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES).\nSlides (PDF)"
   },
   {
     "objectID": "posts/2022-12-28-scikit-tree.html",
@@ -70,48 +91,6 @@
     "text": "Building the project\nFirst, we need to set up a python environment with necessary dependencies to build this code. Here, we largely mirror the scikit-learn developer guidelines. For mac and linux users, this can be done via conda with\nconda create -n partition_env -c conda-forge python=3.10 \\\n    numpy scipy cython pytest matplotlib pandas scikit-learn \\\n    joblib threadpoolctl pytest compilers llvm-openmp\nWe activate the environment with\nconda activate partition_env\nAnd build the library by navigating to the local copy of the repo and installing the package locally via pip\ncd ~/[path to folder]/scikit-tree\npython setup.py clean\npip install --no-build-isolation -e .\nThis may take some time but if it completes successfully, we are ready for the next step by running the unveil_tree example. In the same terminal, run\npython -m examples.tree.plot_regression_tree\nNow, we have a fast, cython-backed codebase that we can use to implement various tree algorithms!"
   },
   {
-    "objectID": "software.html",
-    "href": "software.html",
-    "title": "Software",
-    "section": "",
-    "text": "stochtree is a general-purpose R and Python library for stochastic tree ensemble modeling.\nIts primary interface is a “batteries-included” implementation of both the BART model for supervised learning and the BCF model for causal inference.\nIt also offers a flexible “low-level” interface for specifying custom models that involve stochastic tree ensemble terms. Think PyTorch, but for trees. That’s the vision.\nThe underlying implementation is largely in C++ with tree classes and I/O routines borrowed from xgboost and LightGBM. See here for stochtree’s source repo."
-  },
-  {
-    "objectID": "software.html#stochtree",
-    "href": "software.html#stochtree",
-    "title": "Software",
-    "section": "",
-    "text": "stochtree is a general-purpose R and Python library for stochastic tree ensemble modeling.\nIts primary interface is a “batteries-included” implementation of both the BART model for supervised learning and the BCF model for causal inference.\nIt also offers a flexible “low-level” interface for specifying custom models that involve stochastic tree ensemble terms. Think PyTorch, but for trees. That’s the vision.\nThe underlying implementation is largely in C++ with tree classes and I/O routines borrowed from xgboost and LightGBM. See here for stochtree’s source repo."
-  },
-  {
-    "objectID": "software.html#faststochtree",
-    "href": "software.html#faststochtree",
-    "title": "Software",
-    "section": "faststochtree",
-    "text": "faststochtree\nfaststochtree is a performance-optimized implementation of stochtree’s core models, fine-tuned for fast sampling on Apple Silicon machines. It is mostly optimized for efficient CPU execution, but it was inspired by Giacomo Petrillo’s bartz project which implements a GPU-accelerated version of BART using jax.\nOn a benchmark dataset with 50k observations and 50 features,\n\nstochtree takes 3 minutes to run 1200 iterations of the BART sampler, while faststochtree does the same in 28 seconds,\nstochtree takes 80 seconds to run 1200 iterations of the XBART sampler, while faststochtree does the same in 23 seconds."
-  },
-  {
-    "objectID": "software.html#sgemm_silicon",
-    "href": "software.html#sgemm_silicon",
-    "title": "Software",
-    "section": "sgemm_silicon",
-    "text": "sgemm_silicon\nsgemm_silicon is an experimental / didactic low-level implementation of matrix multiplication on Apple Silicon hardware, inspired by Amanzhol Salykov’s work on x86 CPUs and Nvidia GPUs.\nI haven’t yet worked through the GPU implementation on Metal, but my CPU implementation reaches about 1/4 of the FLOPS of Accelerate’s cblas_sgemm routine, which owes in part to Accelerate’s access to undocumented “AMX” instructions (see here for some third-party research into this instruction set). My implementation outperforms both Eigen and MLX in terms of FLOPS."
-  },
-  {
-    "objectID": "software.html#scikit-tree",
-    "href": "software.html#scikit-tree",
-    "title": "Software",
-    "section": "scikit-tree",
-    "text": "scikit-tree\nscikit-tree was a spiritual precursor to stochtree that began while I was a PhD student. It extended the Cython implementation of a decision tree learner from scikit-learn. The general rationale was:\n\nscikit-learn’s codebase is fast and heavily tested. Relying on their implementation of a tree data structures makes it easier to extend to new methods without worrying about edge cases in the tree code.\nCython offers a nice tradeoff between high-level code (readability, maintainability, syntactic sugar, etc…) and low-level code (direct memory access / management, GIL release, etc…)\n\nThe plan was for this project to provide an easier way to experiment with and extend decision tree models without spending 6 months writing C++. Ultimately, it proved not to be the right tool for the job, for several reasons:\n\nCoupling to cython / python means that an R package would be difficult to offer (and certainly swimming upsteam)\nTooling: cython is much less developed than C / C++ in terms of debugging and profiling tools\nPerformance: most existing BART packages were built with a C++ core and while cython can be much faster than Python, it is still nontrivial to write cython code in a way that competes with C++. The selling point of Cython being as readable as Python could end sacrificed as successive optimizations are made to match C++ performance.\n\nThe process of setting up this testbed project is detailed in this blog post."
-  },
-  {
-    "objectID": "software.html#implementations",
-    "href": "software.html#implementations",
-    "title": "Software",
-    "section": "implementations",
-    "text": "implementations\nImplementations is a Github repository with simple implementations of common statistical and mathematical algorithms that is now largely dormant, but was a fun source of learning during my PhD. The goal of the repo was to enable easy exploration of the challenges and tradeoffs inherent in statistics and machine learning methods, not to provide robust implementations for use in research or applications.\nSome examples:\n\nA (relatively) simple base R implementation of Bayesian CART (Chipman, George, McCulloch 1998)\nSimulation-based implementation and demonstration of the mathematical insights of Hirano et al (2003)\nSimple implementation of a Gibbs sampler for the horseshoe prior in Bayesian linear regression"
-  },
-  {
     "objectID": "cv.html",
     "href": "cv.html",
     "title": "CV",
@@ -145,6 +124,62 @@
     "title": "CV",
     "section": "Teaching",
     "text": "Teaching\n\nMAT 270 (Calculus with Analytic Geometry I) Recitation, Fall 2020\nMAT 271 (Calculus with Analytic Geometry II) Recitation, Fall 2021\nMAT 271 (Calculus with Analytic Geometry II) Recitation, Spring 2022"
+  },
+  {
+    "objectID": "posts.html",
+    "href": "posts.html",
+    "title": "Blog",
+    "section": "",
+    "text": "How fast can we make BART on a laptop?\n\n\n\n\n\n\n\n\nApr 23, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nExperimenting with tree models using the scikit-learn codebase\n\n\n\n\n\n\n\n\nDec 28, 2022\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "software.html",
+    "href": "software.html",
+    "title": "Software",
+    "section": "",
+    "text": "stochtree is a general-purpose R and Python library for stochastic tree ensemble modeling.\nIts primary interface is a “batteries-included” implementation of both the BART model for supervised learning and the BCF model for causal inference.\nIt also offers a flexible “low-level” interface for specifying custom models that involve stochastic tree ensemble terms. Think PyTorch, but for trees. That’s the vision.\nThe underlying implementation is largely in C++ with tree classes and I/O routines borrowed from xgboost and LightGBM. See here for stochtree’s source repo."
+  },
+  {
+    "objectID": "software.html#stochtree",
+    "href": "software.html#stochtree",
+    "title": "Software",
+    "section": "",
+    "text": "stochtree is a general-purpose R and Python library for stochastic tree ensemble modeling.\nIts primary interface is a “batteries-included” implementation of both the BART model for supervised learning and the BCF model for causal inference.\nIt also offers a flexible “low-level” interface for specifying custom models that involve stochastic tree ensemble terms. Think PyTorch, but for trees. That’s the vision.\nThe underlying implementation is largely in C++ with tree classes and I/O routines borrowed from xgboost and LightGBM. See here for stochtree’s source repo."
+  },
+  {
+    "objectID": "software.html#faststochtree",
+    "href": "software.html#faststochtree",
+    "title": "Software",
+    "section": "faststochtree",
+    "text": "faststochtree\nfaststochtree is a performance-optimized implementation of stochtree’s core models, fine-tuned for fast sampling on Apple Silicon machines. It is mostly optimized for efficient CPU execution, but it was inspired by Giacomo Petrillo’s bartz project which implements a GPU-accelerated version of BART using jax.\nOn a benchmark dataset with 50k observations and 50 features,\n\nstochtree takes 3 minutes to run 1200 iterations of the BART sampler, while faststochtree does the same in 36 seconds,\nstochtree takes 80 seconds to run 40 iterations of the XBART sampler, while faststochtree does the same in 23 seconds."
+  },
+  {
+    "objectID": "software.html#sgemm_silicon",
+    "href": "software.html#sgemm_silicon",
+    "title": "Software",
+    "section": "sgemm_silicon",
+    "text": "sgemm_silicon\nsgemm_silicon is an experimental / didactic low-level implementation of matrix multiplication on Apple Silicon hardware, inspired by Amanzhol Salykov’s work on x86 CPUs and Nvidia GPUs.\nI haven’t yet worked through the GPU implementation on Metal, but my CPU implementation reaches about 1/4 of the FLOPS of Accelerate’s cblas_sgemm routine, which owes in part to Accelerate’s access to undocumented “AMX” instructions (see here for some third-party research into this instruction set). My implementation outperforms both Eigen and MLX in terms of FLOPS."
+  },
+  {
+    "objectID": "software.html#scikit-tree",
+    "href": "software.html#scikit-tree",
+    "title": "Software",
+    "section": "scikit-tree",
+    "text": "scikit-tree\nscikit-tree was a spiritual precursor to stochtree that began while I was a PhD student. It extended the Cython implementation of a decision tree learner from scikit-learn. The general rationale was:\n\nscikit-learn’s codebase is fast and heavily tested. Relying on their implementation of a tree data structures makes it easier to extend to new methods without worrying about edge cases in the tree code.\nCython offers a nice tradeoff between high-level code (readability, maintainability, syntactic sugar, etc…) and low-level code (direct memory access / management, GIL release, etc…)\n\nThe plan was for this project to provide an easier way to experiment with and extend decision tree models without spending 6 months writing C++. Ultimately, it proved not to be the right tool for the job, for several reasons:\n\nCoupling to cython / python means that an R package would be difficult to offer (and certainly swimming upsteam)\nTooling: cython is much less developed than C / C++ in terms of debugging and profiling tools\nPerformance: most existing BART packages were built with a C++ core and while cython can be much faster than Python, it is still nontrivial to write cython code in a way that competes with C++. The selling point of Cython being as readable as Python could end sacrificed as successive optimizations are made to match C++ performance.\n\nThe process of setting up this testbed project is detailed in this blog post."
+  },
+  {
+    "objectID": "software.html#implementations",
+    "href": "software.html#implementations",
+    "title": "Software",
+    "section": "implementations",
+    "text": "implementations\nImplementations is a Github repository with simple implementations of common statistical and mathematical algorithms that is now largely dormant, but was a fun source of learning during my PhD. The goal of the repo was to enable easy exploration of the challenges and tradeoffs inherent in statistics and machine learning methods, not to provide robust implementations for use in research or applications.\nSome examples:\n\nA (relatively) simple base R implementation of Bayesian CART (Chipman, George, McCulloch 1998)\nSimulation-based implementation and demonstration of the mathematical insights of Hirano et al (2003)\nSimple implementation of a Gibbs sampler for the horseshoe prior in Bayesian linear regression"
+  },
+  {
+    "objectID": "teaching.html",
+    "href": "teaching.html",
+    "title": "Teaching",
+    "section": "",
+    "text": "I have taught recitation sections for the following courses at Arizona State University:\n\nMAT 270 (Calculus with Analytic Geometry I), Fall 2020\nMAT 271 (Calculus with Analytic Geometry II), Fall 2021\nMAT 271 (Calculus with Analytic Geometry II), Spring 2022"
   },
   {
     "objectID": "posts/2026-04-23-bart-laptop/index.html",
@@ -203,59 +238,24 @@
     "text": "Footnotes\n\n\nNote that there is substantial variation in the faststochtree test set RMSE within each of the 10 iterations of the benchmark suite I ran, so I intend to rerun this experiment for more iterations to see if the test set RMSE averages out closer to its competitors’ performance↩︎\nThe code checks for the availability of NEON instructions with #ifdef __ARM_NEON and for compatibility with __builtin_prefetch with #ifdef __GNUC__, so it still works on all major platforms↩︎\nIt is fair to say that the algorithm is only viable with pre-sorted covariates↩︎"
   },
   {
-    "objectID": "publications.html",
-    "href": "publications.html",
-    "title": "Research",
+    "objectID": "talks.html",
+    "href": "talks.html",
+    "title": "Talks",
     "section": "",
-    "text": "Herren, A., Hahn, P.R., Murray, J. & Carvalho, C (2025)\narXiv | Paper\nstochtree is a C++ library for Bayesian tree ensemble models such as BART and Bayesian Causal Forests (BCF), as well as user-specified variations. Unlike previous BART packages, stochtree provides bindings to both R and Python for full interoperability. stochtree boasts a more comprehensive range of models relative to previous packages, including heteroskedastic forests, random effects, and treed linear models. Additionally, stochtree offers flexible handling of model fits: the ability to save model fits, reinitialize models from existing fits (facilitating improved model initialization heuristics), and pass fits between R and Python. On both platforms, stochtree exposes lower-level functionality, allowing users to specify models incorporating Bayesian tree ensembles without needing to modify C++ code. We illustrate the use of stochtree in three settings: i) straightfoward applications of existing models such as BART and BCF, ii) models that include more sophisticated components like heteroskedasticity and leaf-wise regression models, and iii) as a component of custom MCMC routines to fit nonstandard tree ensemble models."
+    "text": "November 10, 2023 | University of Texas at Austin, Austin, Texas\nPresented as part of the Fall 2023 UT SDS Seminar Series."
   },
   {
-    "objectID": "publications.html#stochtree-bart-based-modeling-in-r-and-python",
-    "href": "publications.html#stochtree-bart-based-modeling-in-r-and-python",
-    "title": "Research",
+    "objectID": "talks.html#statistical-aspect-of-shap-functional-anova-for-model-interpretation",
+    "href": "talks.html#statistical-aspect-of-shap-functional-anova-for-model-interpretation",
+    "title": "Talks",
     "section": "",
-    "text": "Herren, A., Hahn, P.R., Murray, J. & Carvalho, C (2025)\narXiv | Paper\nstochtree is a C++ library for Bayesian tree ensemble models such as BART and Bayesian Causal Forests (BCF), as well as user-specified variations. Unlike previous BART packages, stochtree provides bindings to both R and Python for full interoperability. stochtree boasts a more comprehensive range of models relative to previous packages, including heteroskedastic forests, random effects, and treed linear models. Additionally, stochtree offers flexible handling of model fits: the ability to save model fits, reinitialize models from existing fits (facilitating improved model initialization heuristics), and pass fits between R and Python. On both platforms, stochtree exposes lower-level functionality, allowing users to specify models incorporating Bayesian tree ensembles without needing to modify C++ code. We illustrate the use of stochtree in three settings: i) straightfoward applications of existing models such as BART and BCF, ii) models that include more sophisticated components like heteroskedasticity and leaf-wise regression models, and iii) as a component of custom MCMC routines to fit nonstandard tree ensemble models."
+    "text": "November 10, 2023 | University of Texas at Austin, Austin, Texas\nPresented as part of the Fall 2023 UT SDS Seminar Series."
   },
   {
-    "objectID": "publications.html#deep-learning-for-causal-inference-a-comparison-of-architectures-for-heterogeneous-treatment-effect-estimation",
-    "href": "publications.html#deep-learning-for-causal-inference-a-comparison-of-architectures-for-heterogeneous-treatment-effect-estimation",
-    "title": "Research",
-    "section": "Deep Learning for Causal Inference: A Comparison of Architectures for Heterogeneous Treatment Effect Estimation",
-    "text": "Deep Learning for Causal Inference: A Comparison of Architectures for Heterogeneous Treatment Effect Estimation\nPapakostas, D., Herren, A., Hahn, P.R. & Castillo, K (2024)\narXiv | Paper\nThis work began as an in-depth comparison of neural network architectures for causal inference for a PhD course taken by three of its authors. Credit for polishing it and adding an in-depth study of a sleep dataset owes to Demetri Papakostas. This work ultimately convinced me of the importance of decision trees for tabular datasets (which underpin many causal inference problems) and motivated my work on BART / BCF."
-  },
-  {
-    "objectID": "publications.html#on-true-versus-estimated-propensity-scores-for-treatment-effect-estimation-with-discrete-controls",
-    "href": "publications.html#on-true-versus-estimated-propensity-scores-for-treatment-effect-estimation-with-discrete-controls",
-    "title": "Research",
-    "section": "On true versus estimated propensity scores for treatment effect estimation with discrete controls",
-    "text": "On true versus estimated propensity scores for treatment effect estimation with discrete controls\nHerren, A. & Hahn, P. R.(2023)\narXiv | Paper\nThe finite sample variance of an inverse propensity weighted estimator is derived in the case of discrete control variables with finite support. The obtained expressions generally corroborate widely-cited asymptotic theory showing that estimated propensity scores are superior to true propensity scores in the context of inverse propensity weighting. However, similar analysis of a modified estimator demonstrates that foreknowledge of the true propensity function can confer a statistical advantage when estimating average treatment effects."
-  },
-  {
-    "objectID": "publications.html#feature-selection-in-stratification-estimators-of-causal-effects",
-    "href": "publications.html#feature-selection-in-stratification-estimators-of-causal-effects",
-    "title": "Research",
-    "section": "Feature selection in stratification estimators of causal effects",
-    "text": "Feature selection in stratification estimators of causal effects\nHahn, P. R. & Herren, A. (2022)\narXiv | Paper\nWhat role (if any) can modern, machine-learning-based feature selection techniques play in average treatment effect (ATE) estimation in causal inference? This work addresses the question under several assumptions:\n\nDiscrete covariates\nNo post-treatment covariates\nNo unmeasured confounding\n\nIn this case, a stratification estimator that estimates and re-aggregates the treatment-control contrasts \\(\\bar{Y}_{Z=1,X=x} - \\bar{Y}_{Z=0,X=x}\\) for each unique x in the covariate space will identify the ATE.\nThe paper fuses three frameworks for doing causal inference (Causal DAGs, Potential Outcomes, and Structural Equations) and uses important concepts from each framework. We establish some theory on minimality and optimality of adjustment sets and then illustrate the problems and pitfalls of feature selection in a series of examples."
-  },
-  {
-    "objectID": "publications.html#statistical-aspects-of-shap-functional-anova-for-model-interpretation",
-    "href": "publications.html#statistical-aspects-of-shap-functional-anova-for-model-interpretation",
-    "title": "Research",
-    "section": "Statistical Aspects of SHAP: Functional ANOVA for Model Interpretation",
-    "text": "Statistical Aspects of SHAP: Functional ANOVA for Model Interpretation\nHerren, A. & Hahn, P. R. (2022)\narXiv | Paper | Code\nSHAP (Lundberg and Lee 2017) is a popular tool for assessing feature importance in machine learning models. This paper looks at some of the statistical challenges that present themselves in estimating SHAP scores:\n\nHow many synthetic samples to generate and pass through the model’s prediction function (and by what sampling scheme)\nHow to choose a reference distribution for the averaging taking place in each of the synthetic samples\n\nIn investigating these questions, the paper discusses several connections with the sensitivity analysis and design of experiments literature, in particular:\n\nFunctional ANOVA and the notion of effective dimensionality (Kucherenko et al 2009)\nFractional factorial designs and the hypothesis of factor sparsity (Box and Meyer 1986)"
-  },
-  {
-    "objectID": "publications.html#semi-supervised-learning-and-the-question-of-true-versus-estimated-propensity-scores",
-    "href": "publications.html#semi-supervised-learning-and-the-question-of-true-versus-estimated-propensity-scores",
-    "title": "Research",
-    "section": "Semi-supervised learning and the question of true versus estimated propensity scores",
-    "text": "Semi-supervised learning and the question of true versus estimated propensity scores\nHerren, A. & Hahn, P. R. (2020)\narXiv | Paper | Code\nSuppose we have data:\n\n\\(Y\\): an outcome of interest\n\\(Z\\): a treatment that may (or may not) causally impact the outcome\n\\(X\\): a set of control variables that may be related to \\(Z\\), \\(Y\\), or both\n\nand suppose we’re willing to make all of the assumptions that would allow us to identify and estimate a causal effect of \\(Z\\) on \\(Y\\) after adjusting for \\(X\\).\nIf we were given a large amount of data from the same distribution, but without \\(Y\\) observed (“unlabeled data”), can we use that data in our estimate of the causal effect?\nThe answer, it turns out, is “yes!” but the explanation is somewhat more subtle than “more data is always better.” This paper explores the challenges and opportunities that come with doing causal inference on “unlabeled data.”"
-  },
-  {
-    "objectID": "posts.html",
-    "href": "posts.html",
-    "title": "Blog",
-    "section": "",
-    "text": "How fast can we make BART on a laptop?\n\n\n\n\n\n\n\n\nApr 23, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nExperimenting with tree models using the scikit-learn codebase\n\n\n\n\n\n\n\n\nDec 28, 2022\n\n\n\n\n\nNo matching items"
+    "objectID": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
+    "href": "talks.html#feature-selection-for-learning-causal-effects-a-finite-sample-stratification-estimator-perspective",
+    "title": "Talks",
+    "section": "Feature selection for learning causal effects: a finite-sample, stratification estimator perspective",
+    "text": "Feature selection for learning causal effects: a finite-sample, stratification estimator perspective\nAugust 12, 2022 | Washington University in St. Louis, St. Louis, Missouri\nPresented at the 2022 NBER-NSF Seminar on Bayesian Inference in Econometrics and Statistics (SBIES).\nSlides (PDF)"
   }
 ]
